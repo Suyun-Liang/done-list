@@ -13,6 +13,12 @@ function getWaitTime(unit) {
     return nextMidnight - now;
   }
 
+  if (unit === "minute") {
+    const nextMinute = new Date(now);
+    nextMinute.setMinutes(now.getMinutes() + 1, 0, 0);
+    return nextMinute - now;
+  }
+
   //fallback, update once per second
   return 1000;
 }
@@ -24,17 +30,22 @@ export default function useTick(unit) {
     let timeoutId = null;
     let cancelled = false;
 
+    function tickNow() {
+      setTimestamp(Date.now());
+    }
+
     function scheduleTimeout() {
-      let wait = getWaitTime(unit);
+      const wait = getWaitTime(unit);
 
       timeoutId = window.setTimeout(() => {
         if (cancelled) return;
 
-        setTimestamp(Date.now());
+        tickNow();
         scheduleTimeout();
       }, wait);
     }
 
+    tickNow();
     scheduleTimeout();
 
     return () => {
@@ -45,5 +56,5 @@ export default function useTick(unit) {
     };
   }, []);
 
-  return { timestamp };
+  return timestamp;
 }

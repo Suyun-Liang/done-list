@@ -14,7 +14,7 @@ const MONTH_SHORT = [
   "Dec",
 ];
 
-export function formatDate(timestamp, format) {
+export function formatDate(timestamp, format = "") {
   const date = new Date(timestamp);
   const result = [];
 
@@ -37,3 +37,43 @@ export function formatDate(timestamp, format) {
 
   return result.join("");
 }
+
+export function formatRelativeTime(pastTimestamp, nowTimestamp) {
+  const now = nowTimestamp;
+  const diffMs = now - pastTimestamp;
+
+  if (diffMs < 0) return "just now";
+
+  const minuteMs = 60 * 1000;
+  const hourMs = 60 * minuteMs;
+
+  if (diffMs < minuteMs) return "just now";
+  if (diffMs < hourMs) {
+    const minutes = Math.floor(diffMs / minuteMs);
+    return `${minutes}m ago`;
+  }
+
+  const nowDate = new Date(now);
+  const startOfToday = new Date(nowDate);
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const startOfYesterday = new Date(startOfToday);
+  startOfYesterday.setDate(startOfToday.getDate() - 1);
+
+  if (pastTimestamp >= startOfToday.getTime()) {
+    const hours = Math.floor(diffMs / hourMs);
+    return `${hours}h ago`;
+  }
+
+  if (
+    pastTimestamp >= startOfYesterday.getTime() &&
+    pastTimestamp < startOfToday.getTime()
+  ) {
+    return "yesterday";
+  }
+  return formatDate(pastTimestamp, "MMM dd");
+}
+
+console.log(
+  formatRelativeTime(new Date("Feb 23 2026 15:20:00").getTime(), Date.now()),
+);

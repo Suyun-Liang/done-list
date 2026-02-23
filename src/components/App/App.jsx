@@ -6,12 +6,26 @@ import DateDisplay from "../DateDisplay";
 
 function App() {
   const [entries, setEntries] = React.useState([
-    { id: crypto.randomUUID(), text: "cook", createAt: 1771507380000 },
-    { id: crypto.randomUUID(), text: "clean my room", createAt: 1771498800000 },
+    { id: crypto.randomUUID(), text: "cook", createdAt: 1771507380000 },
+    {
+      id: crypto.randomUUID(),
+      text: "clean my room",
+      createdAt: 1771498800000,
+    },
     {
       id: crypto.randomUUID(),
       text: "feed my boss Alisa",
-      createAt: 1771545600000,
+      createdAt: 1771545600000,
+    },
+    {
+      id: crypto.randomUUID(),
+      text: "learn driving",
+      createdAt: 1771763040000,
+    },
+    {
+      id: crypto.randomUUID(),
+      text: "first driving course",
+      createdAt: 1771858920002,
     },
   ]);
 
@@ -20,7 +34,7 @@ function App() {
   const addEntry = React.useCallback((text) => {
     setEntries((curE) => [
       ...curE,
-      { id: crypto.randomUUID(), text, createAt: Date.now() },
+      { id: crypto.randomUUID(), text, createdAt: Date.now() },
     ]);
   }, []);
   const deleteEntry = React.useCallback((id) => {

@@ -4,7 +4,7 @@ import { formatDate } from "../../utils";
 
 function DateDisplay() {
   // clock tick on : "second" || "day"
-  const { timestamp } = useTick("second");
+  const timestamp = useTick("day");
 
   return (
     <>

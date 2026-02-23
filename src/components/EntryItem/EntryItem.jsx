@@ -1,4 +1,5 @@
 import React from "react";
+import { formatRelativeTime } from "../../utils";
 
 // what next ?
 // under edit status, focus on input
@@ -6,6 +7,8 @@ import React from "react";
 function EntryItem({
   id: entryId,
   children: text,
+  createdAt,
+  now,
   editEntry,
   deleteEntry,
   editingId,
@@ -35,6 +38,7 @@ function EntryItem({
           {text}
           <button onClick={handleEdit}>edit</button>
           <button onClick={() => deleteEntry(entryId)}>delete</button>
+          <span>{formatRelativeTime(createdAt, now)}</span>
         </>
       )}
       {isEditing && (

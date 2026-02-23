@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EntryItem from "../EntryItem/EntryItem";
+import useTick from "../../hooks/use-tick";
 
 function EntryList({
   entries,
@@ -9,6 +10,8 @@ function EntryList({
   stopEdit,
   editingId,
 }) {
+  const now = useTick("minute");
+
   return (
     <div>
       <ul>
@@ -16,6 +19,8 @@ function EntryList({
           <EntryItem
             key={entry.id}
             id={entry.id}
+            now={now}
+            createdAt={entry.createdAt}
             editEntry={editEntry}
             deleteEntry={deleteEntry}
             startEdit={startEdit}
