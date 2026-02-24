@@ -15,20 +15,25 @@ function EntryItem({
   startEdit,
   stopEdit,
 }) {
-  const [newText, setNewText] = React.useState(text);
+  const [editText, setEditText] = React.useState(text);
   const fieldId = React.useId();
   const isEditing = editingId === entryId;
 
   function handleEdit() {
     startEdit(entryId);
-    setNewText(text);
+    setEditText(text);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    editEntry(entryId, newText);
+    editEntry(entryId, editText);
     stopEdit();
+  }
+
+  function handelCancel() {
+    stopEdit();
+    setEditText(text);
   }
 
   return (
@@ -46,19 +51,19 @@ function EntryItem({
           <form onSubmit={handleSubmit}>
             <label htmlFor={`edit-entry-field-${fieldId}`}>Edit: </label>
             <input
+              autoFocus
               id={`edit-entry-field-${fieldId}`}
               type="text"
-              value={newText}
-              onChange={(e) => setNewText(e.target.value)}
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.code === "Escape") {
+                  handelCancel();
+                }
+              }}
             />
             <button type="submit">save</button>
-            <button
-              type="button"
-              onClick={() => {
-                stopEdit();
-                setNewText(text);
-              }}
-            >
+            <button type="button" onClick={handelCancel}>
               cancel
             </button>
           </form>

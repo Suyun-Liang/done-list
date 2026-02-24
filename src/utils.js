@@ -25,6 +25,7 @@ export function formatDate(timestamp, format = "") {
     YYYY: () => String(date.getFullYear()),
   };
 
+  // format: "dd-MM-YYYY" parts: ["dd", "-","MM","-","YYYY"]
   const parts = format.match(/[a-zA-Z]+|[^a-zA-Z]+/g) ?? [format];
 
   for (let part of parts) {
@@ -74,6 +75,6 @@ export function formatRelativeTime(pastTimestamp, nowTimestamp) {
   return formatDate(pastTimestamp, "MMM dd");
 }
 
-console.log(
-  formatRelativeTime(new Date("Feb 23 2026 15:20:00").getTime(), Date.now()),
-);
+// console.log(
+//   formatRelativeTime(new Date("Feb 23 2026 15:20:00").getTime(), Date.now()),
+// );
