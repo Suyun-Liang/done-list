@@ -14,8 +14,15 @@ const MONTH_SHORT = [
   "Dec",
 ];
 
+function isValidTimestamp(value) {
+  return Number.isFinite(value);
+}
+
 export function formatDate(timestamp, format = "") {
+  if (!isValidTimestamp(timestamp)) return "";
+
   const date = new Date(timestamp);
+  const safeFormat = typeof format === "string" ? format : "";
   const result = [];
 
   const TOKEN_MAP = {
@@ -26,7 +33,7 @@ export function formatDate(timestamp, format = "") {
   };
 
   // format: "dd-MM-YYYY" parts: ["dd", "-","MM","-","YYYY"]
-  const parts = format.match(/[a-zA-Z]+|[^a-zA-Z]+/g) ?? [format];
+  const parts = safeFormat.match(/[a-zA-Z]+|[^a-zA-Z]+/g) ?? [safeFormat];
 
   for (let part of parts) {
     if (/^[a-zA-Z]+$/.test(part) && TOKEN_MAP[part]) {
@@ -40,6 +47,10 @@ export function formatDate(timestamp, format = "") {
 }
 
 export function formatRelativeTime(pastTimestamp, nowTimestamp) {
+  if (!isValidTimestamp(pastTimestamp) || !isValidTimestamp(nowTimestamp)) {
+    return "just now";
+  }
+
   const now = nowTimestamp;
   const diffMs = now - pastTimestamp;
 
@@ -78,3 +89,114 @@ export function formatRelativeTime(pastTimestamp, nowTimestamp) {
 // console.log(
 //   formatRelativeTime(new Date("Feb 23 2026 15:20:00").getTime(), Date.now()),
 // );
+
+export function getDayKey(timestamp) {
+  if (!isValidTimestamp(timestamp)) return null;
+
+  return new Date(timestamp).setHours(0, 0, 0, 0);
+}
+
+// find the latest and earliest date from an array of dates
+export function getDateBounds(entries) {
+  if (!Array.isArray(entries) || entries.length === 0) return null;
+
+  let minTimestamp = Infinity;
+  let maxTimestamp = -Infinity;
+
+  entries.forEach((e) => {
+    const createdAt = e?.createdAt;
+    if (!isValidTimestamp(createdAt)) return;
+
+    minTimestamp = Math.min(minTimestamp, createdAt);
+    maxTimestamp = Math.max(maxTimestamp, createdAt);
+  });
+
+  if (minTimestamp === Infinity) return null;
+
+  return [minTimestamp, maxTimestamp];
+}
+
+export function generateDateRange(startDayMs, endDayMs) {
+  if (!isValidTimestamp(startDayMs) || !isValidTimestamp(endDayMs)) return [];
+
+  //("2026-01-01", "2026-02-21") ["2026-01-01","2026-01-02","2026-01-03"..."2026-02-20","2026-02-21"]
+  const startOfStartDayMs = new Date(startDayMs).setHours(0, 0, 0, 0);
+  const startOfEndDayMs = new Date(endDayMs).setHours(0, 0, 0, 0);
+  if (startOfStartDayMs > startOfEndDayMs) return [];
+
+  const result = [];
+  let curDayMs = startOfStartDayMs;
+  while (curDayMs <= startOfEndDayMs) {
+    result.push(curDayMs);
+    const curDate = new Date(curDayMs);
+    curDayMs = curDate.setDate(curDate.getDate() + 1);
+  }
+
+  return result;
+}
+
+export function groupEntriesByDay(entries) {
+  if (!Array.isArray(entries)) return [];
+
+  const bounds = getDateBounds(entries);
+  if (!bounds) return [];
+  const [startDayMs, endDayMs] = bounds;
+  const dateRangeMs = generateDateRange(startDayMs, endDayMs);
+  const map = new Map();
+
+  dateRangeMs.forEach((curDayMs) => {
+    const dayKey = getDayKey(curDayMs);
+    map.set(dayKey, []);
+  });
+
+  entries.forEach((entry) => {
+    const dayKey = getDayKey(entry?.createdAt);
+    if (dayKey === null) return;
+
+    if (!map.has(dayKey)) map.set(dayKey, []);
+
+    map.get(dayKey).push(entry);
+  });
+
+  const result = dateRangeMs
+    .slice()
+    .reverse()
+    .map((dayMs) => {
+      const dayKey = getDayKey(dayMs);
+
+      return { dayKey, entries: map.get(dayKey) };
+    });
+
+  return result;
+}
+
+// console.log(getDayKey(new Date("Feb 23 2025 00:00:00").getTime()));
+// const t = groupEntriesByDay([
+//   { id: crypto.randomUUID(), text: "cook", createdAt: 1771507380000 },
+//   {
+//     id: crypto.randomUUID(),
+//     text: "clean my room",
+//     createdAt: 1771498800000,
+//   },
+//   {
+//     id: crypto.randomUUID(),
+//     text: "feed my boss Alisa",
+//     createdAt: 1771545600000,
+//   },
+//   {
+//     id: crypto.randomUUID(),
+//     text: "learn driving",
+//     createdAt: 1771763040000,
+//   },
+//   {
+//     id: crypto.randomUUID(),
+//     text: "first driving course",
+//     createdAt: 1771858920002,
+//   },
+// ]);
+
+// const b = t.map((e) => {
+//   return { ...e, dayKey: formatDate(e.dayKey, "YYYY-MM-dd") };
+// });
+
+// console.log(b);
