@@ -1,7 +1,9 @@
 import React, { useRef } from "react";
+import { EntriesContext } from "../../context/EntriesContext";
 
-function EntryForm({ addEntry }) {
+function AddEntryForm() {
   const [entry, setEntry] = React.useState("");
+  const { addEntry } = React.useContext(EntriesContext);
   const fieldId = React.useId();
   const inputRef = useRef();
 
@@ -36,4 +38,4 @@ function EntryForm({ addEntry }) {
   );
 }
 
-export default React.memo(EntryForm);
+export default React.memo(AddEntryForm);

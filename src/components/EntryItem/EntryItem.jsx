@@ -1,5 +1,6 @@
 import React from "react";
 import { formatRelativeTime } from "../../utils";
+import { EntriesContext } from "../../context/EntriesContext";
 
 // what next ?
 // under edit status, focus on input
@@ -9,13 +10,12 @@ function EntryItem({
   children: text,
   createdAt,
   now,
-  editEntry,
-  deleteEntry,
   editingId,
   startEdit,
   stopEdit,
 }) {
   const [editText, setEditText] = React.useState(text);
+  const { editEntry, deleteEntry } = React.useContext(EntriesContext);
   const fieldId = React.useId();
   const isEditing = editingId === entryId;
 

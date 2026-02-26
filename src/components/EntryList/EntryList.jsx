@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import EntryItem from "../EntryItem/EntryItem";
 import useTick from "../../hooks/use-tick";
+import { EntriesContext } from "../../context/EntriesContext";
 
-function EntryList({
-  entries,
-  editEntry,
-  deleteEntry,
-  startEdit,
-  stopEdit,
-  editingId,
-}) {
+function EntryList({ startEdit, stopEdit, editingId }) {
   const now = useTick("minute");
+  const { entries } = React.useContext(EntriesContext);
 
   return (
     <div>
@@ -21,8 +16,6 @@ function EntryList({
             id={entry.id}
             now={now}
             createdAt={entry.createdAt}
-            editEntry={editEntry}
-            deleteEntry={deleteEntry}
             startEdit={startEdit}
             stopEdit={stopEdit}
             editingId={editingId}
