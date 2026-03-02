@@ -1,75 +1,135 @@
 import React from "react";
-import { formatRelativeTime } from "../../utils";
-import { EntriesContext } from "../../context/EntriesContext";
+import { formatRelativeTime, isValidTimestamp } from "../../utils";
 
 // what next ?
 // under edit status, focus on input
 
 function EntryItem({
-  id: entryId,
-  children: text,
-  createdAt,
+  entry,
+  // display policy
+  capabilities = {},
   now,
+  // data actions
+  onSave,
+  onDelete,
+  //UI control state
   editingId,
-  startEdit,
-  stopEdit,
+  onStartEdit,
+  onStopEdit,
 }) {
-  const [editText, setEditText] = React.useState(text);
-  const { editEntry, deleteEntry } = React.useContext(EntriesContext);
-  const fieldId = React.useId();
+  const { id: entryId, text } = entry;
+  const [draftText, setDraftText] = React.useState(text);
+  const {
+    canEdit = false,
+    canDelete = false,
+    showRelativeTime = false,
+  } = capabilities;
   const isEditing = editingId === entryId;
 
-  function handleEdit() {
-    startEdit(entryId);
-    setEditText(text);
+  //keep draft default text fresh when user is not editing
+  React.useEffect(() => {
+    if (!isEditing) setDraftText(text);
+  }, [text, isEditing]);
+
+  function handleStartEdit() {
+    if (!canEdit) return;
+    onStartEdit?.(entryId);
+    setDraftText(text);
   }
+
+  function handleCancel() {
+    onStopEdit?.();
+    setDraftText(text);
+  }
+
+  function handleSubmitEdit() {
+    onSave?.(entryId, draftText);
+    handleCancel();
+  }
+  return (
+    <li>
+      {!isEditing && (
+        <DisplayEntry
+          entry={entry}
+          canEdit={canEdit}
+          canDelete={canDelete}
+          showRelativeTime={showRelativeTime}
+          now={now}
+          onEdit={handleStartEdit}
+          onDelete={() => onDelete?.(entry.id)}
+        />
+      )}
+      {canEdit && isEditing && (
+        <EditEntryForm
+          value={draftText}
+          setValue={setDraftText}
+          onSave={handleSubmitEdit}
+          onCancel={handleCancel}
+        />
+      )}
+    </li>
+  );
+}
+
+function DisplayEntry({
+  entry,
+  canEdit,
+  canDelete,
+  showRelativeTime,
+  now,
+  onEdit,
+  onDelete,
+}) {
+  const { text, createdAt } = entry;
+  return (
+    <>
+      {text}
+      {canEdit && (
+        <button type="button" onClick={onEdit}>
+          edit
+        </button>
+      )}
+      {canDelete && (
+        <button type="button" onClick={onDelete}>
+          delete
+        </button>
+      )}
+      {showRelativeTime && isValidTimestamp(now) && (
+        <span>{formatRelativeTime(createdAt, now)}</span>
+      )}
+    </>
+  );
+}
+
+function EditEntryForm({ onSave, onCancel, value, setValue }) {
+  const fieldId = React.useId();
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    editEntry(entryId, editText);
-    stopEdit();
-  }
-
-  function handelCancel() {
-    stopEdit();
-    setEditText(text);
+    onSave?.();
   }
 
   return (
-    <li>
-      {!isEditing && (
-        <>
-          {text}
-          <button onClick={handleEdit}>edit</button>
-          <button onClick={() => deleteEntry(entryId)}>delete</button>
-          <span>{formatRelativeTime(createdAt, now)}</span>
-        </>
-      )}
-      {isEditing && (
-        <>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor={`edit-entry-field-${fieldId}`}>Edit: </label>
-            <input
-              autoFocus
-              id={`edit-entry-field-${fieldId}`}
-              type="text"
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.code === "Escape") {
-                  handelCancel();
-                }
-              }}
-            />
-            <button type="submit">save</button>
-            <button type="button" onClick={handelCancel}>
-              cancel
-            </button>
-          </form>
-        </>
-      )}
-    </li>
+    <form onSubmit={handleSubmit}>
+      <label htmlFor={`edit-entry-field-${fieldId}`}>Edit: </label>
+      <input
+        autoFocus
+        id={`edit-entry-field-${fieldId}`}
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.code === "Escape") {
+            onCancel?.();
+          }
+        }}
+      />
+      <button type="submit">save</button>
+      <button type="button" onClick={onCancel}>
+        cancel
+      </button>
+    </form>
   );
 }
 

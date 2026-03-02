@@ -14,7 +14,7 @@ const MONTH_SHORT = [
   "Dec",
 ];
 
-function isValidTimestamp(value) {
+export function isValidTimestamp(value) {
   return Number.isFinite(value);
 }
 
@@ -116,10 +116,11 @@ export function getDateBounds(entries) {
   return [minTimestamp, maxTimestamp];
 }
 
+//input:("2026-01-01", "2026-02-21")
+//output: ["2026-01-01","2026-01-02","2026-01-03"..."2026-02-20","2026-02-21"]
 export function generateDateRange(startDayMs, endDayMs) {
   if (!isValidTimestamp(startDayMs) || !isValidTimestamp(endDayMs)) return [];
 
-  //("2026-01-01", "2026-02-21") ["2026-01-01","2026-01-02","2026-01-03"..."2026-02-20","2026-02-21"]
   const startOfStartDayMs = new Date(startDayMs).setHours(0, 0, 0, 0);
   const startOfEndDayMs = new Date(endDayMs).setHours(0, 0, 0, 0);
   if (startOfStartDayMs > startOfEndDayMs) return [];
@@ -135,6 +136,16 @@ export function generateDateRange(startDayMs, endDayMs) {
   return result;
 }
 
+//input = [{ id: ..., text: "...", createdAt: "2026-01-02" },
+// { id: ..., text: "...", createdAt: "2026-01-05 },
+// { id: ..., text: "...", createdAt: "2026-01-10 },
+// { id: ..., text: "...", createdAt: "2026-01-10" }]
+
+//output: [
+// {datKey: "2026-01-10", entries: [{ ... createdAt: "2026-01-10 },{... createdAt: "2026-01-10" }]}
+// {datKey: "2026-01-09", entries:[]}
+// ...
+// {datKey: "2026-01-02", entries:[{ ... createdAt: "2026-01-02" }]}
 export function groupEntriesByDay(entries) {
   if (!Array.isArray(entries)) return [];
 
