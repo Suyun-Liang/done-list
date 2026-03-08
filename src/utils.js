@@ -146,7 +146,7 @@ export function generateDateRange(startDayMs, endDayMs) {
 // {datKey: "2026-01-09", entries:[]}
 // ...
 // {datKey: "2026-01-02", entries:[{ ... createdAt: "2026-01-02" }]}
-export function groupEntriesByDay(entries) {
+export function buildDailyTimeline(entries) {
   if (!Array.isArray(entries)) return [];
 
   const bounds = getDateBounds(entries);
@@ -177,6 +177,27 @@ export function groupEntriesByDay(entries) {
 
       return { dayKey, entries: map.get(dayKey) };
     });
+
+  return result;
+}
+
+export function groupEntriesByDay(entries) {
+  if (!Array.isArray(entries)) return [];
+
+  const map = new Map();
+
+  entries.forEach((entry) => {
+    const dayKey = getDayKey(entry?.createdAt);
+    if (dayKey === null) return;
+
+    if (!map.has(dayKey)) map.set(dayKey, []);
+
+    map.get(dayKey).push(entry);
+  });
+
+  const result = Array.from(map.entries())
+    .sort((a, b) => b[0] - a[0])
+    .map(([dayKey, entries]) => ({ dayKey, entries }));
 
   return result;
 }

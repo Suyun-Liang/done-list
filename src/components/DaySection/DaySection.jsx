@@ -7,7 +7,7 @@ function DaySection({ dayKey, entries, ...delegated }) {
     <div>
       <div>{formatDate(dayKey, "YYYY-MMM-dd")}</div>
       {entries.length > 0 && <EntryList entries={entries} {...delegated} />}
-      {entries.length === 0 && <p>"A quiet day..."</p>}
+      {entries.length === 0 && <p>(A quiet day...)</p>}
     </div>
   );
 }

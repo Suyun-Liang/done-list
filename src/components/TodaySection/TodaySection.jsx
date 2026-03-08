@@ -1,5 +1,4 @@
 import React from "react";
-import EntryList from "../EntryList";
 import AddEntryForm from "../AddEntryForm";
 import { EntriesContext } from "../../context/EntriesContext";
 import { getDayKey } from "../../utils";

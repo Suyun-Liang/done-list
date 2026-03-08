@@ -1,17 +1,20 @@
 import React from "react";
 import DaySection from "../DaySection/DaySection";
 import { EntriesContext } from "../../context/EntriesContext";
-import { getDayKey, groupEntriesByDay } from "../../utils";
+import { buildDailyTimeline, getDayKey } from "../../utils";
 import useTick from "../../hooks/use-tick";
 
 function PastSection() {
   const [editingId, setEditingId] = React.useState(null);
   const { entries, editEntry, deleteEntry } = React.useContext(EntriesContext);
+  // auto render when its 24:00 so entries from today will be sent to the past section
+  const now = useTick("day");
 
+  const todayKey = getDayKey(now);
   const entriesExceptToday = entries.filter(
-    (e) => getDayKey(e.createdAt) !== getDayKey(Date.now()),
+    (e) => getDayKey(e.createdAt) !== todayKey,
   );
-  const groupedEntries = groupEntriesByDay(entriesExceptToday);
+  const dailyTimeline = buildDailyTimeline(entriesExceptToday);
   const capabilities = {
     canEdit: false,
     canDelete: false,
@@ -28,7 +31,7 @@ function PastSection() {
   return (
     <div>
       <p>Past Section</p>
-      {groupedEntries.map((e) => (
+      {dailyTimeline.map((e) => (
         <DaySection
           key={e.dayKey}
           dayKey={e.dayKey}
