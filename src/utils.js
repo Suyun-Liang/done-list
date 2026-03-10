@@ -202,6 +202,13 @@ export function groupEntriesByDay(entries) {
   return result;
 }
 
+export function normalizeEntry(e) {
+  return {
+    ...e,
+    notes: e.notes ?? [],
+  };
+}
+
 // console.log(getDayKey(new Date("Feb 23 2025 00:00:00").getTime()));
 // const t = groupEntriesByDay([
 //   { id: crypto.randomUUID(), text: "cook", createdAt: 1771507380000 },

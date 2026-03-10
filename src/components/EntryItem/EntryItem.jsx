@@ -1,5 +1,6 @@
 import React from "react";
 import { formatRelativeTime, isValidTimestamp } from "../../utils";
+import NotesSection from "../NotesSection/NotesSection";
 
 // what next ?
 // under edit status, focus on input
@@ -17,12 +18,13 @@ function EntryItem({
   onStartEdit,
   onStopEdit,
 }) {
-  const { id: entryId, text } = entry;
+  const { id: entryId, text, createdAt, notes } = entry;
   const [draftText, setDraftText] = React.useState(text);
   const {
     canEdit = false,
     canDelete = false,
     showRelativeTime = false,
+    canAddNote = false,
   } = capabilities;
   const isEditing = editingId === entryId;
 
@@ -42,7 +44,7 @@ function EntryItem({
     setDraftText(text);
   }
 
-  function handleSubmitEdit() {
+  function saveAndExit() {
     onSave?.(entryId, draftText);
     handleCancel();
   }
@@ -50,7 +52,8 @@ function EntryItem({
     <li>
       {!isEditing && (
         <DisplayEntry
-          entry={entry}
+          text={text}
+          createdAt={createdAt}
           canEdit={canEdit}
           canDelete={canDelete}
           showRelativeTime={showRelativeTime}
@@ -63,16 +66,18 @@ function EntryItem({
         <EditEntryForm
           value={draftText}
           setValue={setDraftText}
-          onSave={handleSubmitEdit}
+          onSave={saveAndExit}
           onCancel={handleCancel}
         />
       )}
+      {canAddNote && <NotesSection notes={notes} />}
     </li>
   );
 }
 
 function DisplayEntry({
-  entry,
+  text,
+  createdAt,
   canEdit,
   canDelete,
   showRelativeTime,
@@ -80,7 +85,6 @@ function DisplayEntry({
   onEdit,
   onDelete,
 }) {
-  const { text, createdAt } = entry;
   return (
     <>
       {text}
@@ -106,7 +110,6 @@ function EditEntryForm({ onSave, onCancel, value, setValue }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-
     onSave?.();
   }
 

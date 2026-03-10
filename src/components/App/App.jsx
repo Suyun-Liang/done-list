@@ -5,16 +5,19 @@ import PastSection from "../PastSection";
 import TodaySection from "../TodaySection/TodaySection";
 import SearchBar from "../SearchBar";
 import SearchResultSection from "../SearchResultSection/SearchResultSection";
+import { useDebouncedValue } from "../../hooks/use-debounced-value";
 
 function App() {
   const [query, setQuery] = React.useState("");
-  const isSearching = query.trim() !== "";
+  const [debouncedQuery] = useDebouncedValue(query, 300);
+
+  const isSearching = debouncedQuery.trim() !== "";
   return (
     <>
       <EntriesProvider>
         <Header>Today I...</Header>
         <SearchBar query={query} onQueryChange={setQuery} />
-        {isSearching && <SearchResultSection query={query} />}
+        {isSearching && <SearchResultSection query={debouncedQuery} />}
         {!isSearching && (
           <>
             <TodaySection />

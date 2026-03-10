@@ -19,6 +19,7 @@ function PastSection() {
     canEdit: false,
     canDelete: false,
     showRelativeTime: false,
+    canAddNote: true,
   };
 
   const startEditing = React.useCallback((id) => {

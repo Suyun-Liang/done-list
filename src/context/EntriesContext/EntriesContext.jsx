@@ -1,5 +1,6 @@
 import React from "react";
 import { useStickyState } from "../../hooks/use-sticky-state.js";
+import { normalizeEntry } from "../../utils.js";
 
 export const EntriesContext = React.createContext();
 
@@ -9,32 +10,48 @@ const DEFAULT_ENTRIES = [
     id: crypto.randomUUID(),
     text: "clean my room",
     createdAt: 1771498800000,
+    notes: [
+      { id: crypto.randomUUID(), text: "tired...", createdAt: 1771545600000 },
+    ],
   },
   {
     id: crypto.randomUUID(),
     text: "feed my boss Alisa",
     createdAt: 1771545600000,
+    notes: [
+      {
+        id: crypto.randomUUID(),
+        text: "she loved it",
+        createdAt: 1771858920002,
+      },
+    ],
   },
   {
     id: crypto.randomUUID(),
     text: "learn driving",
     createdAt: 1771763040000,
+    notes: [],
   },
   {
     id: crypto.randomUUID(),
     text: "first driving course",
     createdAt: 1771858920002,
+    notes: [],
   },
 ];
 
 function EntriesProvider({ children }) {
   const [entries, setEntries] = useStickyState("entries", DEFAULT_ENTRIES);
+  const normalizedEntries = React.useMemo(
+    () => entries.map(normalizeEntry),
+    [entries],
+  );
 
   const addEntry = React.useCallback(
     (text) => {
       setEntries((curE) => [
         ...curE,
-        { id: crypto.randomUUID(), text, createdAt: Date.now() },
+        { id: crypto.randomUUID(), text, createdAt: Date.now(), notes: [] },
       ]);
     },
     [setEntries],
@@ -52,9 +69,35 @@ function EntriesProvider({ children }) {
     [setEntries],
   );
 
+  const addNote = React.useCallback(
+    (entryId, text) => {
+      setEntries((curE) =>
+        curE.map((e) => {
+          if (e.id !== entryId) return e;
+          const newNote = {
+            id: crypto.randomUUID(),
+            text,
+            createdAt: Date.now(),
+          };
+          return {
+            ...e,
+            notes: [...e.notes, newNote],
+          };
+        }),
+      );
+    },
+    [setEntries],
+  );
+
   const value = React.useMemo(
-    () => ({ entries, addEntry, deleteEntry, editEntry }),
-    [entries, addEntry, deleteEntry, editEntry],
+    () => ({
+      entries: normalizedEntries,
+      addEntry,
+      deleteEntry,
+      editEntry,
+      addNote,
+    }),
+    [normalizedEntries, addEntry, deleteEntry, editEntry, addNote],
   );
 
   return <EntriesContext value={value}>{children}</EntriesContext>;
