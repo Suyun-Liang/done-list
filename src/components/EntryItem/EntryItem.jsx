@@ -17,6 +17,8 @@ function EntryItem({
   editingId,
   onStartEdit,
   onStopEdit,
+  onAddNote,
+  onDeleteNote,
 }) {
   const { id: entryId, text, createdAt, notes } = entry;
   const [draftText, setDraftText] = React.useState(text);
@@ -70,7 +72,14 @@ function EntryItem({
           onCancel={handleCancel}
         />
       )}
-      {canAddNote && <NotesSection notes={notes} />}
+      {canAddNote && (
+        <NotesSection
+          notes={notes}
+          entryId={entryId}
+          onAddNote={onAddNote}
+          onDeleteNote={onDeleteNote}
+        />
+      )}
     </li>
   );
 }

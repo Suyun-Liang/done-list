@@ -6,7 +6,8 @@ import useTick from "../../hooks/use-tick";
 
 function PastSection() {
   const [editingId, setEditingId] = React.useState(null);
-  const { entries, editEntry, deleteEntry } = React.useContext(EntriesContext);
+  const { entries, editEntry, deleteEntry, addNote, deleteNote } =
+    React.useContext(EntriesContext);
   // auto render when its 24:00 so entries from today will be sent to the past section
   const now = useTick("day");
 
@@ -42,6 +43,8 @@ function PastSection() {
           onDelete={deleteEntry}
           onStartEdit={startEditing}
           onStopEdit={endEditing}
+          onAddNote={addNote}
+          onDeleteNote={deleteNote}
           editingId={editingId}
         />
       ))}

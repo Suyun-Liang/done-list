@@ -89,6 +89,18 @@ function EntriesProvider({ children }) {
     [setEntries],
   );
 
+  const deleteNote = React.useCallback(
+    (entryId, noteId) => {
+      setEntries((curE) => {
+        return curE.map((e) => {
+          if (e.id !== entryId) return e;
+          return { ...e, notes: e.notes.filter((n) => n.id !== noteId) };
+        });
+      });
+    },
+    [setEntries],
+  );
+
   const value = React.useMemo(
     () => ({
       entries: normalizedEntries,
@@ -96,8 +108,9 @@ function EntriesProvider({ children }) {
       deleteEntry,
       editEntry,
       addNote,
+      deleteNote,
     }),
-    [normalizedEntries, addEntry, deleteEntry, editEntry, addNote],
+    [normalizedEntries, addEntry, deleteEntry, editEntry, addNote, deleteNote],
   );
 
   return <EntriesContext value={value}>{children}</EntriesContext>;
