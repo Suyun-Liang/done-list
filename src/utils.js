@@ -1,3 +1,5 @@
+// import { DAY_MS } from "./const";
+
 // date = timestamp, format="MMM dd" ||"MMM, dd, YYYY"
 const MONTH_SHORT = [
   "Jan",
@@ -160,6 +162,7 @@ export function buildDailyTimeline(entries) {
     map.set(dayKey, []);
   });
 
+  // {"2026-01-02":[], "2026-01-09":[] ...}
   entries.forEach((entry) => {
     const dayKey = getDayKey(entry?.createdAt);
     if (dayKey === null) return;
@@ -177,6 +180,67 @@ export function buildDailyTimeline(entries) {
 
       return { dayKey, entries: map.get(dayKey) };
     });
+
+  return result;
+}
+
+//input = [{ id: ..., text: "...", createdAt: "2026-01-02" },
+// { id: ..., text: "...", createdAt: "2026-01-05 },
+// { id: ..., text: "...", createdAt: "2026-01-10 },
+// { id: ..., text: "...", createdAt: "2026-01-10" }]
+
+//output: [
+// {datKey: "2026-01-10", entries: [{ ... createdAt: "2026-01-10 },{... createdAt: "2026-01-10" }]}
+// {datKey: "2026-01-05", entries:[{... createdAt:"2026-01-05"},...]}
+// {datKey: "2026-01-04", entries:[]}
+// {datKey: "2026-01-03", entries:[]}
+// {datKey: "2026-01-02", entries:[{ ... createdAt: "2026-01-02" }]}
+export function buildCompactTimeline(entries, fillGapsUpToDays = 3) {
+  if (!Array.isArray(entries)) return [];
+  const map = new Map();
+
+  // {"2026-01-02":[...], "2026-01-05":[...],"2026-01-10":[...]}
+  entries.forEach((entry) => {
+    const dayKey = getDayKey(entry?.createdAt);
+    if (dayKey === null) return;
+
+    if (!map.has(dayKey)) map.set(dayKey, []);
+
+    map.get(dayKey).push(entry);
+  });
+
+  // [Number("2026-01-10"), Number("2026-01-05"), Number("2026-01-02")]
+  const activeDays = Array.from(map.keys())
+    .map((dayKey) => Number(dayKey))
+    .sort((a, b) => b - a);
+
+  const result = [];
+
+  // compare curDay with nextDay to validate the gap
+  // if gap is valid add gap days into the result
+  activeDays.forEach((curDayMs, index) => {
+    result.push({
+      dayKey: curDayMs,
+      entries: map.get(curDayMs),
+    });
+
+    const nextDayMs = activeDays[index + 1];
+    if (nextDayMs === undefined) return;
+
+    const gapDays = (curDayMs - nextDayMs) / DAY_MS - 1;
+
+    if (gapDays > 0 && gapDays <= fillGapsUpToDays) {
+      for (let i = 1; i <= gapDays; i++) {
+        const emptyDayMs = curDayMs - i * DAY_MS;
+
+        result.push({
+          dayKey: emptyDayMs,
+
+          entries: [],
+        });
+      }
+    }
+  });
 
   return result;
 }
@@ -208,34 +272,3 @@ export function normalizeEntry(e) {
     notes: e.notes ?? [],
   };
 }
-
-// console.log(getDayKey(new Date("Feb 23 2025 00:00:00").getTime()));
-// const t = groupEntriesByDay([
-//   { id: crypto.randomUUID(), text: "cook", createdAt: 1771507380000 },
-//   {
-//     id: crypto.randomUUID(),
-//     text: "clean my room",
-//     createdAt: 1771498800000,
-//   },
-//   {
-//     id: crypto.randomUUID(),
-//     text: "feed my boss Alisa",
-//     createdAt: 1771545600000,
-//   },
-//   {
-//     id: crypto.randomUUID(),
-//     text: "learn driving",
-//     createdAt: 1771763040000,
-//   },
-//   {
-//     id: crypto.randomUUID(),
-//     text: "first driving course",
-//     createdAt: 1771858920002,
-//   },
-// ]);
-
-// const b = t.map((e) => {
-//   return { ...e, dayKey: formatDate(e.dayKey, "YYYY-MM-dd") };
-// });
-
-// console.log(b);

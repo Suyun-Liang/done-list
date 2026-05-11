@@ -1,7 +1,11 @@
 import React from "react";
 import DaySection from "../DaySection/DaySection";
 import { EntriesContext } from "../../context/EntriesContext";
-import { buildDailyTimeline, getDayKey } from "../../utils";
+import {
+  buildCompactTimeline,
+  buildDailyTimeline,
+  getDayKey,
+} from "../../utils";
 import useTick from "../../hooks/use-tick";
 
 function PastSection() {
@@ -15,7 +19,7 @@ function PastSection() {
   const entriesExceptToday = entries.filter(
     (e) => getDayKey(e.createdAt) !== todayKey,
   );
-  const dailyTimeline = buildDailyTimeline(entriesExceptToday);
+  const dailyTimeline = buildCompactTimeline(entriesExceptToday);
   const capabilities = {
     canEdit: false,
     canDelete: false,
