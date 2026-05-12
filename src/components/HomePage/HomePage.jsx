@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Header from "../Header";
 import EntriesProvider from "../../context/EntriesContext";
@@ -7,7 +9,7 @@ import SearchBar from "../SearchBar";
 import SearchResultSection from "../SearchResultSection/SearchResultSection";
 import { useDebouncedValue } from "../../hooks/use-debounced-value";
 
-function App() {
+function HomePage() {
   const [query, setQuery] = React.useState("");
   const [debouncedQuery] = useDebouncedValue(query, 300);
 
@@ -29,4 +31,4 @@ function App() {
   );
 }
 
-export default App;
+export default HomePage;

@@ -1,4 +1,4 @@
-// import { DAY_MS } from "./const";
+import { DAY_MS } from "./const";
 
 // date = timestamp, format="MMM dd" ||"MMM, dd, YYYY"
 const MONTH_SHORT = [
