@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useStickyState } from "../../hooks/use-sticky-state.js";
 import { normalizeEntry } from "../../utils.js";

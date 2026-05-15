@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import DaySection from "../DaySection/DaySection";
 import { EntriesContext } from "../../context/EntriesContext";
@@ -24,7 +26,7 @@ function PastSection() {
     canEdit: false,
     canDelete: false,
     showRelativeTime: false,
-    canAddNote: true,
+    canAddNote: false,
   };
 
   const startEditing = React.useCallback((id) => {

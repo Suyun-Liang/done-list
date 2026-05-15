@@ -28,7 +28,6 @@ function TodaySection() {
   }, []);
   return (
     <>
-      <p>Today Section</p>
       <DaySection
         dayKey={todayKey}
         entries={todayEntries}
