@@ -7,35 +7,33 @@ import { normalizeEntry } from "../../utils.js";
 export const EntriesContext = React.createContext();
 
 const DEFAULT_ENTRIES = [
-  { id: crypto.randomUUID(), text: "cook", createdAt: 1771507380000 },
+  { id: "fdsfs", text: "cook", createdAt: 1771507380000 },
   {
-    id: crypto.randomUUID(),
+    id: "1112",
     text: "clean my room",
     createdAt: 1771498800000,
-    notes: [
-      { id: crypto.randomUUID(), text: "tired...", createdAt: 1771545600000 },
-    ],
+    notes: [{ id: "dfgghhh", text: "tired...", createdAt: 1771545600000 }],
   },
   {
-    id: crypto.randomUUID(),
+    id: "123",
     text: "feed my boss Alisa",
     createdAt: 1771545600000,
     notes: [
       {
-        id: crypto.randomUUID(),
+        id: "dfghff",
         text: "she loved it",
         createdAt: 1771858920002,
       },
     ],
   },
   {
-    id: crypto.randomUUID(),
+    id: "1134",
     text: "learn driving",
     createdAt: 1771763040000,
     notes: [],
   },
   {
-    id: crypto.randomUUID(),
+    id: "3445",
     text: "first driving course",
     createdAt: 1771858920002,
     notes: [],
