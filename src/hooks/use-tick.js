@@ -23,8 +23,8 @@ function getWaitTime(unit) {
   return 1000;
 }
 
-export default function useTick(unit) {
-  const [timestamp, setTimestamp] = React.useState(Date.now());
+export default function useTick(unit, initialTimestamp = Date.now()) {
+  const [timestamp, setTimestamp] = React.useState(initialTimestamp);
 
   React.useEffect(() => {
     let timeoutId = null;

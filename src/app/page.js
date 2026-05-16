@@ -1,5 +1,13 @@
-import ClientApp from "./client";
+import Header from "../components/Header";
+import TodaySection from "../components/TodaySection/TodaySection";
 
 export default function Page() {
-  return <ClientApp />;
+  const initialNow = Date.now();
+
+  return (
+    <>
+      <Header>Today I...</Header>
+      <TodaySection initialNow={initialNow} />
+    </>
+  );
 }

@@ -10,14 +10,14 @@ import {
 } from "../../utils";
 import useTick from "../../hooks/use-tick";
 
-function PastSection() {
+function PastSection({ initialNow }) {
   const [editingId, setEditingId] = React.useState(null);
   const { entries, editEntry, deleteEntry, addNote, deleteNote } =
     React.useContext(EntriesContext);
   // auto render when its 24:00 so entries from today will be sent to the past section
-  const now = useTick("day");
-
+  const now = useTick("day", initialNow);
   const todayKey = getDayKey(now);
+
   const entriesExceptToday = entries.filter(
     (e) => getDayKey(e.createdAt) !== todayKey,
   );

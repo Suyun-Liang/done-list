@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import AddEntryForm from "../AddEntryForm";
 import { EntriesContext } from "../../context/EntriesContext";
@@ -5,17 +7,20 @@ import { getDayKey } from "../../utils";
 import useTick from "../../hooks/use-tick";
 import DaySection from "../DaySection/DaySection";
 
-function TodaySection() {
+function TodaySection({ initialNow }) {
   const [editingId, setEditingId] = React.useState(null);
-  const now = useTick("minute");
   const { entries, editEntry, deleteEntry } = React.useContext(EntriesContext);
 
-  const todayKey = getDayKey(Date.now());
   const capabilities = {
     canEdit: true,
     canDelete: true,
     showRelativeTime: true,
   };
+
+  const relativeNow = useTick("minute", initialNow);
+  const calendarNow = useTick("day", initialNow);
+  const todayKey = getDayKey(calendarNow);
+
   const todayEntries = entries.filter(
     (e) => getDayKey(e.createdAt) === todayKey,
   );
@@ -37,7 +42,7 @@ function TodaySection() {
         onStartEdit={startEditing}
         onStopEdit={endEditing}
         editingId={editingId}
-        now={now}
+        now={relativeNow}
       />
       <AddEntryForm />
     </>
