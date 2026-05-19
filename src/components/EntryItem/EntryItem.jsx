@@ -1,6 +1,8 @@
 import React from "react";
+import styles from "./EntryItem.module.css";
 import { formatRelativeTime, isValidTimestamp } from "../../utils";
 import NotesSection from "../NotesSection/NotesSection";
+import { normalizeTextInput } from "../../helper";
 
 // what next ?
 // under edit status, focus on input
@@ -22,6 +24,7 @@ function EntryItem({
 }) {
   const { id: entryId, text, createdAt, notes } = entry;
   const [draftText, setDraftText] = React.useState(text);
+  const [submitError, setSubmitError] = React.useState("");
   const {
     canEdit = false,
     canDelete = false,
@@ -44,10 +47,11 @@ function EntryItem({
   function handleCancel() {
     onStopEdit?.();
     setDraftText(text);
+    setSubmitError("");
   }
 
-  function saveAndExit() {
-    onSave?.(entryId, draftText);
+  function saveAndExit(id, text) {
+    onSave?.(id, text);
     handleCancel();
   }
   return (
@@ -66,8 +70,11 @@ function EntryItem({
       )}
       {canEdit && isEditing && (
         <EditEntryForm
+          id={entryId}
           value={draftText}
+          submitError={submitError}
           setValue={setDraftText}
+          setSubmitError={setSubmitError}
           onSave={saveAndExit}
           onCancel={handleCancel}
         />
@@ -114,12 +121,34 @@ function DisplayEntry({
   );
 }
 
-function EditEntryForm({ onSave, onCancel, value, setValue }) {
+function EditEntryForm({
+  id,
+  onSave,
+  onCancel,
+  value,
+  setValue,
+  submitError,
+  setSubmitError,
+}) {
   const fieldId = React.useId();
+
+  React.useEffect(() => {
+    if (!submitError) return;
+    const timeoutId = window.setTimeout(() => {
+      setSubmitError("");
+    }, 2000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [submitError]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    onSave?.();
+    const normalizedText = normalizeTextInput(value);
+    if (!normalizedText) {
+      setSubmitError("Please enter something...");
+      return;
+    }
+    onSave?.(id, normalizedText);
   }
 
   return (
@@ -130,7 +159,10 @@ function EditEntryForm({ onSave, onCancel, value, setValue }) {
         id={`edit-entry-field-${fieldId}`}
         type="text"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          setValue(e.target.value);
+          if (submitError) setSubmitError("");
+        }}
         onKeyDown={(e) => {
           if (e.code === "Escape") {
             onCancel?.();
@@ -141,6 +173,11 @@ function EditEntryForm({ onSave, onCancel, value, setValue }) {
       <button type="button" onClick={onCancel}>
         cancel
       </button>
+      <p
+        className={`${styles.entryError} ${submitError ? styles.visible : ""}`}
+      >
+        {submitError}
+      </p>
     </form>
   );
 }

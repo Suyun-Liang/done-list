@@ -1,0 +1,8 @@
+.entryError {
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.visible {
+  opacity: 1;
+}

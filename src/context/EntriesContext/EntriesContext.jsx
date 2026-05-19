@@ -3,6 +3,7 @@
 import React from "react";
 import { useStickyState } from "../../hooks/use-sticky-state.js";
 import { normalizeEntry } from "../../utils.js";
+import { normalizeTextInput } from "../../helper.js";
 
 export const EntriesContext = React.createContext();
 
@@ -49,9 +50,17 @@ function EntriesProvider({ children }) {
 
   const addEntry = React.useCallback(
     (text) => {
+      //validate the text:
+      const normalizedText = normalizeTextInput(text);
+      if (!normalizedText) return;
       setEntries((curE) => [
         ...curE,
-        { id: crypto.randomUUID(), text, createdAt: Date.now(), notes: [] },
+        {
+          id: crypto.randomUUID(),
+          text: normalizedText,
+          createdAt: Date.now(),
+          notes: [],
+        },
       ]);
     },
     [setEntries],
@@ -64,19 +73,27 @@ function EntriesProvider({ children }) {
   );
   const editEntry = React.useCallback(
     (id, text) => {
-      setEntries((curE) => curE.map((e) => (e.id === id ? { ...e, text } : e)));
+      const normalizedText = normalizeTextInput(text);
+      if (!normalizedText) return;
+      setEntries((curE) =>
+        curE.map((e) => (e.id === id ? { ...e, text: normalizedText } : e)),
+      );
     },
     [setEntries],
   );
 
   const addNote = React.useCallback(
     (entryId, text) => {
+      //validate the text:
+      const normalizedText = normalizeTextInput(text);
+      if (!normalizedText) return;
+
       setEntries((curE) =>
         curE.map((e) => {
           if (e.id !== entryId) return e;
           const newNote = {
             id: crypto.randomUUID(),
-            text,
+            text: normalizedText,
             createdAt: Date.now(),
           };
           return {
