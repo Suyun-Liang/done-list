@@ -269,6 +269,6 @@ export function groupEntriesByDay(entries) {
 export function normalizeEntry(e) {
   return {
     ...e,
-    notes: e.notes ?? [],
+    comments: e.comments ?? [],
   };
 }

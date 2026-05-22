@@ -1,8 +1,10 @@
 import React from "react";
 import styles from "./EntryItem.module.css";
+import { Edit, MessageSquare, Trash2 } from "react-feather";
 import { formatRelativeTime, isValidTimestamp } from "../../utils";
-import NotesSection from "../NotesSection/NotesSection";
+import AddCommentForm from "../AddCommentForm/AddCommentForm";
 import { normalizeTextInput } from "../../helper";
+import CommentList from "../CommentList/CommentList";
 
 // what next ?
 // under edit status, focus on input
@@ -16,22 +18,28 @@ function EntryItem({
   onSave,
   onDelete,
   //UI control state
-  editingId,
-  onStartEdit,
-  onStopEdit,
-  onAddNote,
-  onDeleteNote,
+  onAddComment,
+  onDeleteComment,
+  activeEntryAction,
+  onStartEntryAction,
+  onStopEntryAction,
 }) {
-  const { id: entryId, text, createdAt, notes } = entry;
+  const { id: entryId, text, createdAt, comments } = entry;
   const [draftText, setDraftText] = React.useState(text);
   const [submitError, setSubmitError] = React.useState("");
+
   const {
     canEdit = false,
     canDelete = false,
+    canComment = false,
     showRelativeTime = false,
-    canAddNote = false,
   } = capabilities;
-  const isEditing = editingId === entryId;
+  const isEditing =
+    activeEntryAction?.entryId === entryId &&
+    activeEntryAction?.type === "edit";
+  const isCommenting =
+    activeEntryAction?.entryId === entryId &&
+    activeEntryAction?.type === "comment";
 
   //keep draft default text fresh when user is not editing
   React.useEffect(() => {
@@ -40,12 +48,19 @@ function EntryItem({
 
   function handleStartEdit() {
     if (!canEdit) return;
-    onStartEdit?.(entryId);
+    onStartEntryAction(entryId, "edit");
     setDraftText(text);
   }
 
+  function handleStartComment() {
+    if (!canComment) return;
+    onStartEntryAction(entryId, "comment");
+    // toggle comment form
+    if (isCommenting) onStopEntryAction();
+  }
+
   function handleCancel() {
-    onStopEdit?.();
+    onStopEntryAction?.();
     setDraftText(text);
     setSubmitError("");
   }
@@ -56,18 +71,22 @@ function EntryItem({
   }
   return (
     <li>
+      {/*  edit form replace the entry display */}
       {!isEditing && (
         <DisplayEntry
           text={text}
           createdAt={createdAt}
           canEdit={canEdit}
           canDelete={canDelete}
+          canComment={canComment}
           showRelativeTime={showRelativeTime}
           now={now}
           onEdit={handleStartEdit}
+          onComment={handleStartComment}
           onDelete={() => onDelete?.(entry.id)}
         />
       )}
+
       {canEdit && isEditing && (
         <EditEntryForm
           id={entryId}
@@ -79,13 +98,16 @@ function EntryItem({
           onCancel={handleCancel}
         />
       )}
-      {canAddNote && (
-        <NotesSection
-          notes={notes}
+
+      {comments.length > 0 && (
+        <CommentList
+          comments={comments}
           entryId={entryId}
-          onAddNote={onAddNote}
-          onDeleteNote={onDeleteNote}
+          onDeleteComment={onDeleteComment}
         />
+      )}
+      {canComment && isCommenting && (
+        <AddCommentForm entryId={entryId} onAddComment={onAddComment} />
       )}
     </li>
   );
@@ -96,9 +118,11 @@ function DisplayEntry({
   createdAt,
   canEdit,
   canDelete,
+  canComment,
   showRelativeTime,
   now,
   onEdit,
+  onComment,
   onDelete,
 }) {
   return (
@@ -106,12 +130,17 @@ function DisplayEntry({
       {text}
       {canEdit && (
         <button type="button" onClick={onEdit}>
-          edit
+          <Edit />
+        </button>
+      )}
+      {canComment && (
+        <button onClick={onComment}>
+          <MessageSquare />
         </button>
       )}
       {canDelete && (
         <button type="button" onClick={onDelete}>
-          delete
+          <Trash2 />
         </button>
       )}
       {showRelativeTime && isValidTimestamp(now) && (

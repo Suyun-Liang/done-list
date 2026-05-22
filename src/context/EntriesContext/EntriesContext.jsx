@@ -13,13 +13,13 @@ const DEFAULT_ENTRIES = [
     id: "1112",
     text: "clean my room",
     createdAt: 1771498800000,
-    notes: [{ id: "dfgghhh", text: "tired...", createdAt: 1771545600000 }],
+    comments: [{ id: "dfgghhh", text: "tired...", createdAt: 1771545600000 }],
   },
   {
     id: "123",
     text: "feed my boss Alisa",
     createdAt: 1771545600000,
-    notes: [
+    comments: [
       {
         id: "dfghff",
         text: "she loved it",
@@ -31,13 +31,13 @@ const DEFAULT_ENTRIES = [
     id: "1134",
     text: "learn driving",
     createdAt: 1771763040000,
-    notes: [],
+    comments: [],
   },
   {
     id: "3445",
     text: "first driving course",
     createdAt: 1771858920002,
-    notes: [],
+    comments: [],
   },
 ];
 
@@ -59,7 +59,7 @@ function EntriesProvider({ children }) {
           id: crypto.randomUUID(),
           text: normalizedText,
           createdAt: Date.now(),
-          notes: [],
+          comments: [],
         },
       ]);
     },
@@ -82,7 +82,7 @@ function EntriesProvider({ children }) {
     [setEntries],
   );
 
-  const addNote = React.useCallback(
+  const addComment = React.useCallback(
     (entryId, text) => {
       //validate the text:
       const normalizedText = normalizeTextInput(text);
@@ -91,14 +91,14 @@ function EntriesProvider({ children }) {
       setEntries((curE) =>
         curE.map((e) => {
           if (e.id !== entryId) return e;
-          const newNote = {
+          const newComment = {
             id: crypto.randomUUID(),
             text: normalizedText,
             createdAt: Date.now(),
           };
           return {
             ...e,
-            notes: [...e.notes, newNote],
+            comments: [...e.comments, newComment],
           };
         }),
       );
@@ -106,12 +106,15 @@ function EntriesProvider({ children }) {
     [setEntries],
   );
 
-  const deleteNote = React.useCallback(
-    (entryId, noteId) => {
+  const deleteComment = React.useCallback(
+    (entryId, commentId) => {
       setEntries((curE) => {
         return curE.map((e) => {
           if (e.id !== entryId) return e;
-          return { ...e, notes: e.notes.filter((n) => n.id !== noteId) };
+          return {
+            ...e,
+            comments: e.comments.filter((c) => c.id !== commentId),
+          };
         });
       });
     },
@@ -124,10 +127,17 @@ function EntriesProvider({ children }) {
       addEntry,
       deleteEntry,
       editEntry,
-      addNote,
-      deleteNote,
+      addComment,
+      deleteComment,
     }),
-    [normalizedEntries, addEntry, deleteEntry, editEntry, addNote, deleteNote],
+    [
+      normalizedEntries,
+      addEntry,
+      deleteEntry,
+      editEntry,
+      addComment,
+      deleteComment,
+    ],
   );
 
   return <EntriesContext value={value}>{children}</EntriesContext>;

@@ -27,6 +27,7 @@ function AddEntryForm() {
       return;
     }
     addEntry(normalizedText);
+    inputRef?.current?.blur();
     setEntry("");
     setSubmitError("");
   }
@@ -55,7 +56,7 @@ function AddEntryForm() {
           }
         }}
       ></input>
-      <button>send</button>
+      <button>Add</button>
       <p
         className={`${styles.entryError} ${submitError ? styles.visible : ""}`}
       >

@@ -11,8 +11,9 @@ import {
 import useTick from "../../hooks/use-tick";
 
 function PastSection({ initialNow }) {
-  const [editingId, setEditingId] = React.useState(null);
-  const { entries, editEntry, deleteEntry, addNote, deleteNote } =
+  // {entryId, type: "edit"|"comment"}
+  const [activeEntryAction, setActiveEntryAction] = React.useState(null);
+  const { entries, editEntry, deleteEntry, addComment, deleteComment } =
     React.useContext(EntriesContext);
   // auto render when its 24:00 so entries from today will be sent to the past section
   const now = useTick("day", initialNow);
@@ -26,14 +27,15 @@ function PastSection({ initialNow }) {
     canEdit: false,
     canDelete: false,
     showRelativeTime: false,
-    canAddNote: false,
+    canComment: true,
   };
 
-  const startEditing = React.useCallback((id) => {
-    setEditingId(id);
+  //open or close action panel: "edit"|"comment"
+  const openEntryAction = React.useCallback((entryId, type) => {
+    setActiveEntryAction({ entryId, type });
   }, []);
-  const endEditing = React.useCallback(() => {
-    setEditingId(null);
+  const closeEntryAction = React.useCallback(() => {
+    setActiveEntryAction(null);
   }, []);
 
   return (
@@ -47,11 +49,11 @@ function PastSection({ initialNow }) {
           capabilities={capabilities}
           onSave={editEntry}
           onDelete={deleteEntry}
-          onStartEdit={startEditing}
-          onStopEdit={endEditing}
-          onAddNote={addNote}
-          onDeleteNote={deleteNote}
-          editingId={editingId}
+          onAddComment={addComment}
+          onDeleteComment={deleteComment}
+          activeEntryAction={activeEntryAction}
+          onStartEntryAction={openEntryAction}
+          onStopEntryAction={closeEntryAction}
         />
       ))}
     </div>

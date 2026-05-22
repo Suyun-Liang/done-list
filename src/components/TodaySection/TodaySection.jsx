@@ -8,7 +8,8 @@ import useTick from "../../hooks/use-tick";
 import DaySection from "../DaySection/DaySection";
 
 function TodaySection({ initialNow }) {
-  const [editingId, setEditingId] = React.useState(null);
+  // {entryId, type: "edit"|"comment"}
+  const [activeEntryAction, setActiveEntryAction] = React.useState(null);
   const { entries, editEntry, deleteEntry } = React.useContext(EntriesContext);
 
   const capabilities = {
@@ -25,11 +26,12 @@ function TodaySection({ initialNow }) {
     (e) => getDayKey(e.createdAt) === todayKey,
   );
 
-  const startEditing = React.useCallback((id) => {
-    setEditingId(id);
+  //open or close action panel: "edit"|"comment"
+  const openEntryAction = React.useCallback((entryId, type) => {
+    setActiveEntryAction({ entryId, type });
   }, []);
-  const endEditing = React.useCallback(() => {
-    setEditingId(null);
+  const closeEntryAction = React.useCallback(() => {
+    setActiveEntryAction(null);
   }, []);
   return (
     <>
@@ -39,9 +41,9 @@ function TodaySection({ initialNow }) {
         capabilities={capabilities}
         onSave={editEntry}
         onDelete={deleteEntry}
-        onStartEdit={startEditing}
-        onStopEdit={endEditing}
-        editingId={editingId}
+        activeEntryAction={activeEntryAction}
+        onStartEntryAction={openEntryAction}
+        onStopEntryAction={closeEntryAction}
         now={relativeNow}
       />
       <AddEntryForm />
