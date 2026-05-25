@@ -1,31 +1,20 @@
 import React from "react";
 import styles from "./AddEntryForm.module.css";
 import { EntriesContext } from "../../context/EntriesContext";
-import { normalizeTextInput } from "../../helper";
+import useTextInputValidation from "../../hooks/use-text-input-validation";
 
 function AddEntryForm() {
   const [entry, setEntry] = React.useState("");
-  const [submitError, setSubmitError] = React.useState("");
   const { addEntry } = React.useContext(EntriesContext);
   const fieldId = React.useId();
   const inputRef = React.useRef();
-
-  React.useEffect(() => {
-    if (!submitError) return;
-    const timeoutId = window.setTimeout(() => {
-      setSubmitError("");
-    }, 2000);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [submitError]);
+  const { submitError, setSubmitError, getValidText } =
+    useTextInputValidation();
 
   function handleSubmit(e) {
     e.preventDefault();
-    const normalizedText = normalizeTextInput(entry);
-    if (!normalizedText) {
-      setSubmitError("Please enter something...");
-      return;
-    }
+    const normalizedText = getValidText(entry);
+    if (!normalizedText) return;
     addEntry(normalizedText);
     inputRef?.current?.blur();
     setEntry("");

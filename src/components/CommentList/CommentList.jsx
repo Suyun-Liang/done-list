@@ -1,7 +1,9 @@
 import React from "react";
+import { Trash2 } from "react-feather";
 
-function CommentList({ comments, entryId, onDeleteComment }) {
+function CommentList({ comments, entryId, canDeleteComment, onDeleteComment }) {
   function handleDelete(commentId) {
+    if (!canDeleteComment) return;
     onDeleteComment(entryId, commentId);
   }
   return (
@@ -10,14 +12,16 @@ function CommentList({ comments, entryId, onDeleteComment }) {
         {comments.map((c) => (
           <li key={c.id}>
             {c.text}{" "}
-            <button
-              type="button"
-              onClick={() => {
-                handleDelete(c.id);
-              }}
-            >
-              delete
-            </button>
+            {canDeleteComment && (
+              <button
+                type="button"
+                onClick={() => {
+                  handleDelete(c.id);
+                }}
+              >
+                <Trash2 />
+              </button>
+            )}
           </li>
         ))}
       </ul>

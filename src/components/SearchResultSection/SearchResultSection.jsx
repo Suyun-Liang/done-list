@@ -5,16 +5,24 @@ import { EntriesContext } from "../../context/EntriesContext";
 import { groupEntriesByDay } from "../../utils";
 import DaySection from "../DaySection/DaySection";
 
-function getEntryMatchCount(entry, query) {
-  let count = 0;
+// check if each entry or its comment has matched text, and filter the comments
+// if there is matched result return an object
+// if no match then return null
+function getEntrySearchResult(entry, query) {
+  const isEntryMatched = entry.text.toLowerCase().includes(query);
 
-  if (entry.text.toLowerCase().includes(query)) count += 1;
+  const matchedComments = entry.comments.filter((comment) =>
+    comment.text.toLowerCase().includes(query),
+  );
 
-  entry.comments.forEach((comment) => {
-    if (comment.text.toLowerCase().includes(query)) count += 1;
-  });
+  const matchCount = (isEntryMatched ? 1 : 0) + matchedComments.length;
 
-  return count;
+  if (matchCount === 0) return null;
+
+  return {
+    entry: { ...entry, comments: matchedComments },
+    matchCount,
+  };
 }
 
 function SearchResultSection({ query }) {
@@ -22,17 +30,16 @@ function SearchResultSection({ query }) {
 
   const trimmedQuery = query.trim();
   const lowerCasedQuery = trimmedQuery.toLowerCase();
+
   const searchResults = entries
-    .map((entry) => ({
-      entry,
-      matchCount: getEntryMatchCount(entry, lowerCasedQuery),
-    }))
-    .filter((result) => result.matchCount > 0);
+    .map((entry) => getEntrySearchResult(entry, lowerCasedQuery))
+    .filter(Boolean);
   const matchedEntries = searchResults.map((result) => result.entry);
   const matchCount = searchResults.reduce(
     (total, result) => total + result.matchCount,
     0,
   );
+
   const groupedResults = groupEntriesByDay(matchedEntries);
 
   const matchCountLabel =

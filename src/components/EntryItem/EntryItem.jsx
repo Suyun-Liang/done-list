@@ -1,13 +1,9 @@
 import React from "react";
-import styles from "./EntryItem.module.css";
 import { Edit, MessageSquare, Trash2 } from "react-feather";
 import { formatRelativeTime, isValidTimestamp } from "../../utils";
 import AddCommentForm from "../AddCommentForm/AddCommentForm";
-import { normalizeTextInput } from "../../helper";
 import CommentList from "../CommentList/CommentList";
-
-// what next ?
-// under edit status, focus on input
+import EditEntryForm from "../EditEntryForm/EditEntryForm";
 
 function EntryItem({
   entry,
@@ -26,12 +22,12 @@ function EntryItem({
 }) {
   const { id: entryId, text, createdAt, comments } = entry;
   const [draftText, setDraftText] = React.useState(text);
-  const [submitError, setSubmitError] = React.useState("");
 
   const {
     canEdit = false,
     canDelete = false,
     canComment = false,
+    canDeleteComment = false,
     showRelativeTime = false,
   } = capabilities;
   const isEditing =
@@ -62,7 +58,6 @@ function EntryItem({
   function handleCancel() {
     onStopEntryAction?.();
     setDraftText(text);
-    setSubmitError("");
   }
 
   function saveAndExit(id, text) {
@@ -73,7 +68,7 @@ function EntryItem({
     <li>
       {/*  edit form replace the entry display */}
       {!isEditing && (
-        <DisplayEntry
+        <DisplayEntryItem
           text={text}
           createdAt={createdAt}
           canEdit={canEdit}
@@ -91,9 +86,7 @@ function EntryItem({
         <EditEntryForm
           id={entryId}
           value={draftText}
-          submitError={submitError}
           setValue={setDraftText}
-          setSubmitError={setSubmitError}
           onSave={saveAndExit}
           onCancel={handleCancel}
         />
@@ -103,17 +96,22 @@ function EntryItem({
         <CommentList
           comments={comments}
           entryId={entryId}
+          canDeleteComment={canDeleteComment}
           onDeleteComment={onDeleteComment}
         />
       )}
       {canComment && isCommenting && (
-        <AddCommentForm entryId={entryId} onAddComment={onAddComment} />
+        <AddCommentForm
+          entryId={entryId}
+          onAddComment={onAddComment}
+          onCancel={handleCancel}
+        />
       )}
     </li>
   );
 }
 
-function DisplayEntry({
+function DisplayEntryItem({
   text,
   createdAt,
   canEdit,
@@ -147,67 +145,6 @@ function DisplayEntry({
         <span>{formatRelativeTime(createdAt, now)}</span>
       )}
     </>
-  );
-}
-
-function EditEntryForm({
-  id,
-  onSave,
-  onCancel,
-  value,
-  setValue,
-  submitError,
-  setSubmitError,
-}) {
-  const fieldId = React.useId();
-
-  React.useEffect(() => {
-    if (!submitError) return;
-    const timeoutId = window.setTimeout(() => {
-      setSubmitError("");
-    }, 2000);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [submitError]);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const normalizedText = normalizeTextInput(value);
-    if (!normalizedText) {
-      setSubmitError("Please enter something...");
-      return;
-    }
-    onSave?.(id, normalizedText);
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor={`edit-entry-field-${fieldId}`}>Edit: </label>
-      <input
-        autoFocus
-        id={`edit-entry-field-${fieldId}`}
-        type="text"
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-          if (submitError) setSubmitError("");
-        }}
-        onKeyDown={(e) => {
-          if (e.code === "Escape") {
-            onCancel?.();
-          }
-        }}
-      />
-      <button type="submit">save</button>
-      <button type="button" onClick={onCancel}>
-        cancel
-      </button>
-      <p
-        className={`${styles.entryError} ${submitError ? styles.visible : ""}`}
-      >
-        {submitError}
-      </p>
-    </form>
   );
 }
 

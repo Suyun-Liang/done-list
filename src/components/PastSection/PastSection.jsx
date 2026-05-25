@@ -28,6 +28,7 @@ function PastSection({ initialNow }) {
     canDelete: false,
     showRelativeTime: false,
     canComment: true,
+    canDeleteComment: true,
   };
 
   //open or close action panel: "edit"|"comment"

@@ -8,35 +8,113 @@ import { normalizeTextInput } from "../../helper.js";
 export const EntriesContext = React.createContext();
 
 const DEFAULT_ENTRIES = [
-  { id: "fdsfs", text: "cook", createdAt: 1771507380000 },
   {
-    id: "1112",
-    text: "clean my room",
-    createdAt: 1771498800000,
-    comments: [{ id: "dfgghhh", text: "tired...", createdAt: 1771545600000 }],
-  },
-  {
-    id: "123",
-    text: "feed my boss Alisa",
-    createdAt: 1771545600000,
+    id: "1",
+    text: "made coffee and opened the window",
+    createdAt: 1771507380000,
     comments: [
       {
-        id: "dfghff",
-        text: "she loved it",
-        createdAt: 1771858920002,
+        id: "c1",
+        text: "the weather felt soft today",
+        createdAt: 1771510980000,
       },
     ],
   },
+
+  // --- 2 day gap ---
+
   {
-    id: "1134",
-    text: "learn driving",
+    id: "2",
+    text: "studied German for 20 minutes",
     createdAt: 1771763040000,
     comments: [],
   },
+
   {
-    id: "3445",
-    text: "first driving course",
-    createdAt: 1771858920002,
+    id: "3",
+    text: "stayed in bed most of the afternoon",
+    createdAt: 1771766640000,
+    comments: [
+      {
+        id: "c2",
+        text: "i think i really needed the rest",
+        createdAt: 1771770240000,
+      },
+    ],
+  },
+
+  // --- 1 day gap ---
+
+  {
+    id: "4",
+    text: "went outside even though i didn't want to",
+    createdAt: 1771945320000,
+    comments: [],
+  },
+
+  // --- 4 day gap (should NOT fill) ---
+
+  {
+    id: "5",
+    text: "fixed a small React bug",
+    createdAt: 1772377320000,
+    comments: [
+      {
+        id: "c3",
+        text: "the bug was just a missing import",
+        createdAt: 1772380920000,
+      },
+      {
+        id: "c4",
+        text: "felt proud after solving it",
+        createdAt: 1772384520000,
+      },
+    ],
+  },
+
+  {
+    id: "6",
+    text: "watched TV with my husband",
+    createdAt: 1772463720000,
+    comments: [],
+  },
+
+  // --- 3 day gap (edge case: SHOULD fill) ---
+
+  {
+    id: "7",
+    text: "survived my driving lesson",
+    createdAt: 1772809320000,
+    comments: [
+      {
+        id: "c5",
+        text: "parallel parking is still scary",
+        createdAt: 1772812920000,
+      },
+    ],
+  },
+
+  // same day
+  {
+    id: "8",
+    text: "cooked noodles at 11pm",
+    createdAt: 1772816520000,
+    comments: [],
+  },
+
+  // --- today-ish entry for relative time testing ---
+
+  {
+    id: "9",
+    text: "worked on DoneList before sleeping",
+    createdAt: Date.now() - 1000 * 60 * 8,
+    comments: [],
+  },
+
+  {
+    id: "10",
+    text: "did absolutely nothing today",
+    createdAt: Date.now() - 1000 * 60 * 60 * 2,
     comments: [],
   },
 ];
