@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./EntryItem.module.css";
 import { Edit, MessageSquare, Trash2 } from "react-feather";
 import { formatRelativeTime, isValidTimestamp } from "../../utils";
 import AddCommentForm from "../AddCommentForm/AddCommentForm";
@@ -65,7 +66,7 @@ function EntryItem({
     handleCancel();
   }
   return (
-    <li>
+    <li className={styles.entryItem}>
       {/*  edit form replace the entry display */}
       {!isEditing && (
         <DisplayEntryItem
@@ -125,25 +126,35 @@ function DisplayEntryItem({
 }) {
   return (
     <>
-      {text}
-      {canEdit && (
-        <button type="button" onClick={onEdit}>
-          <Edit />
-        </button>
-      )}
-      {canComment && (
-        <button onClick={onComment}>
-          <MessageSquare />
-        </button>
-      )}
-      {canDelete && (
-        <button type="button" onClick={onDelete}>
-          <Trash2 />
-        </button>
-      )}
-      {showRelativeTime && isValidTimestamp(now) && (
-        <span>{formatRelativeTime(createdAt, now)}</span>
-      )}
+      <div className={styles.entryMain}>
+        <div className={styles.entryTextGroup}>
+          <p>
+            {text}{" "}
+            {showRelativeTime && isValidTimestamp(now) && (
+              <span className={styles.relativeTime}>
+                {formatRelativeTime(createdAt, now)}
+              </span>
+            )}
+          </p>
+        </div>
+        <div className={styles.entryActionGroup}>
+          {canEdit && (
+            <button type="button" onClick={onEdit}>
+              <Edit />
+            </button>
+          )}
+          {canComment && (
+            <button onClick={onComment}>
+              <MessageSquare />
+            </button>
+          )}
+          {canDelete && (
+            <button type="button" onClick={onDelete}>
+              <Trash2 />
+            </button>
+          )}
+        </div>
+      </div>
     </>
   );
 }

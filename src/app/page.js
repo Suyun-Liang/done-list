@@ -6,10 +6,10 @@ export default function Page() {
   const initialNow = Date.now();
 
   return (
-    <>
+    <main>
       <Header>Today I...</Header>
       <TodaySection initialNow={initialNow} />
       <ViewHistoryLink />
-    </>
+    </main>
   );
 }

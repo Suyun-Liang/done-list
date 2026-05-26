@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./CommentList.module.css";
 import { Trash2 } from "react-feather";
 
 function CommentList({ comments, entryId, canDeleteComment, onDeleteComment }) {
@@ -10,18 +11,24 @@ function CommentList({ comments, entryId, canDeleteComment, onDeleteComment }) {
     <div>
       <ul>
         {comments.map((c) => (
-          <li key={c.id}>
-            {c.text}{" "}
-            {canDeleteComment && (
-              <button
-                type="button"
-                onClick={() => {
-                  handleDelete(c.id);
-                }}
-              >
-                <Trash2 />
-              </button>
-            )}
+          <li key={c.id} className={styles.commentItem}>
+            <div className={styles.commentMain}>
+              <div className={styles.commentTextGroup}>
+                <p>{c.text}</p>
+              </div>
+              <div className={styles.commentActionGroup}>
+                {canDeleteComment && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleDelete(c.id);
+                    }}
+                  >
+                    <Trash2 />
+                  </button>
+                )}
+              </div>
+            </div>
           </li>
         ))}
       </ul>
