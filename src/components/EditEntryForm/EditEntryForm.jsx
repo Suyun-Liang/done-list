@@ -1,5 +1,8 @@
 import React from "react";
 import styles from "./EditEntryForm.module.css";
+
+import VisuallyHidden from "../VisuallyHidden";
+
 import useTextInputValidation from "../../hooks/use-text-input-validation";
 
 function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
@@ -16,33 +19,39 @@ function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor={`edit-entry-field-${fieldId}`}>Edit: </label>
-      <input
-        autoFocus
-        id={`edit-entry-field-${fieldId}`}
-        type="text"
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-          if (submitError) setSubmitError("");
-        }}
-        onKeyDown={(e) => {
-          if (e.code === "Escape") {
-            setSubmitError("");
-            onCancel?.();
-          }
-        }}
-      />
-      <button type="submit">save</button>
-      <button
-        type="button"
-        onClick={() => {
-          onCancel?.();
-          setSubmitError("");
-        }}
-      >
-        cancel
-      </button>
+      <div className={styles.formMain}>
+        <VisuallyHidden as="label" htmlFor={`edit-entry-field-${fieldId}`}>
+          Edit entry
+        </VisuallyHidden>
+        <input
+          autoFocus
+          id={`edit-entry-field-${fieldId}`}
+          type="text"
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value);
+            if (submitError) setSubmitError("");
+          }}
+          onKeyDown={(e) => {
+            if (e.code === "Escape") {
+              setSubmitError("");
+              onCancel?.();
+            }
+          }}
+        />
+        <div className={styles.editEntryActionGroup}>
+          <button type="submit">save</button>
+          <button
+            type="button"
+            onClick={() => {
+              onCancel?.();
+              setSubmitError("");
+            }}
+          >
+            cancel
+          </button>
+        </div>
+      </div>
       <p
         className={`${styles.entryError} ${submitError ? styles.visible : ""}`}
       >

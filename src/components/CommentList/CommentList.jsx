@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./CommentList.module.css";
 import { Trash2 } from "react-feather";
+import VisuallyHidden from "../VisuallyHidden";
 
 function CommentList({ comments, entryId, canDeleteComment, onDeleteComment }) {
   function handleDelete(commentId) {
@@ -25,6 +26,7 @@ function CommentList({ comments, entryId, canDeleteComment, onDeleteComment }) {
                     }}
                   >
                     <Trash2 />
+                    <VisuallyHidden>Delete comment</VisuallyHidden>
                   </button>
                 )}
               </div>

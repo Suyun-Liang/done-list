@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid;
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+
+.date {
+  border-bottom: 1px solid;
+}
+
+.quietDay {
+  margin: auto;
+}

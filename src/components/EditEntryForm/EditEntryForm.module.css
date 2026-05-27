@@ -1,3 +1,11 @@
+.formMain {
+  display: flex;
+  justify-content: space-between;
+}
+
+.editEntryActionGroup {
+}
+
 .entryError {
   opacity: 0;
   transition: opacity 500ms ease;

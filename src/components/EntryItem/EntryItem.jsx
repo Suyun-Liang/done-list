@@ -5,6 +5,7 @@ import { formatRelativeTime, isValidTimestamp } from "../../utils";
 import AddCommentForm from "../AddCommentForm/AddCommentForm";
 import CommentList from "../CommentList/CommentList";
 import EditEntryForm from "../EditEntryForm/EditEntryForm";
+import VisuallyHidden from "../VisuallyHidden";
 
 function EntryItem({
   entry,
@@ -141,16 +142,19 @@ function DisplayEntryItem({
           {canEdit && (
             <button type="button" onClick={onEdit}>
               <Edit />
+              <VisuallyHidden>edit entry</VisuallyHidden>
             </button>
           )}
           {canComment && (
             <button onClick={onComment}>
               <MessageSquare />
+              <VisuallyHidden>comment entry</VisuallyHidden>
             </button>
           )}
           {canDelete && (
             <button type="button" onClick={onDelete}>
               <Trash2 />
+              <VisuallyHidden>delete entry</VisuallyHidden>
             </button>
           )}
         </div>

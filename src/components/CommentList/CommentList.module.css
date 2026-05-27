@@ -8,4 +8,5 @@
 }
 
 .commentActionGroup {
+  flex-shrink: 0;
 }

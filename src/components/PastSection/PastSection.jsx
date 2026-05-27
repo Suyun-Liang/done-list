@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import styles from "./PastSection.module.css";
 import DaySection from "../DaySection/DaySection";
 import { EntriesContext } from "../../context/EntriesContext";
 import {
@@ -42,21 +43,23 @@ function PastSection({ initialNow }) {
   return (
     <div>
       <p>Past Section</p>
-      {dailyTimeline.map((e) => (
-        <DaySection
-          key={e.dayKey}
-          dayKey={e.dayKey}
-          entries={e.entries}
-          capabilities={capabilities}
-          onSave={editEntry}
-          onDelete={deleteEntry}
-          onAddComment={addComment}
-          onDeleteComment={deleteComment}
-          activeEntryAction={activeEntryAction}
-          onStartEntryAction={openEntryAction}
-          onStopEntryAction={closeEntryAction}
-        />
-      ))}
+      <div className={styles.wrapper}>
+        {dailyTimeline.map((e) => (
+          <DaySection
+            key={e.dayKey}
+            dayKey={e.dayKey}
+            entries={e.entries}
+            capabilities={capabilities}
+            onSave={editEntry}
+            onDelete={deleteEntry}
+            onAddComment={addComment}
+            onDeleteComment={deleteComment}
+            activeEntryAction={activeEntryAction}
+            onStartEntryAction={openEntryAction}
+            onStopEntryAction={closeEntryAction}
+          />
+        ))}
+      </div>
     </div>
   );
 }
