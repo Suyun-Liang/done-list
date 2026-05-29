@@ -4,6 +4,7 @@ import styles from "./EditEntryForm.module.css";
 import VisuallyHidden from "../VisuallyHidden";
 
 import useTextInputValidation from "../../hooks/use-text-input-validation";
+import Button from "../Button/Button";
 
 function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
   const fieldId = React.useId();
@@ -40,8 +41,12 @@ function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
           }}
         />
         <div className={styles.editEntryActionGroup}>
-          <button type="submit">save</button>
-          <button
+          <Button variant="fill" size="small" type="submit">
+            save
+          </Button>
+          <Button
+            variant="ghost"
+            size="small"
             type="button"
             onClick={() => {
               onCancel?.();
@@ -49,7 +54,7 @@ function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
             }}
           >
             cancel
-          </button>
+          </Button>
         </div>
       </div>
       <p

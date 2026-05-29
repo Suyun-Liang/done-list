@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./AddCommentForm.module.css";
 
 import useTextInputValidation from "../../hooks/use-text-input-validation";
+import Button from "../Button/Button";
 
 function AddCommentForm({ entryId, onAddComment, onCancel }) {
   const [draftNote, setDraftNote] = React.useState("");
@@ -36,7 +37,9 @@ function AddCommentForm({ entryId, onAddComment, onCancel }) {
           }
         }}
       />
-      <button type="submit">add comment</button>
+      <Button variant="fill" size="small" type="submit">
+        add comment
+      </Button>
       <p
         className={`${styles.entryError} ${submitError ? styles.visible : ""}`}
       >

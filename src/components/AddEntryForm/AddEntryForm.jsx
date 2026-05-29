@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./AddEntryForm.module.css";
 import { EntriesContext } from "../../context/EntriesContext";
 import useTextInputValidation from "../../hooks/use-text-input-validation";
+import Button from "../Button/Button";
 
 function AddEntryForm() {
   const [entry, setEntry] = React.useState("");
@@ -45,7 +46,9 @@ function AddEntryForm() {
           }
         }}
       ></input>
-      <button>Add</button>
+      <Button variant="fill" size="small">
+        Add
+      </Button>
       <p
         className={`${styles.entryError} ${submitError ? styles.visible : ""}`}
       >
