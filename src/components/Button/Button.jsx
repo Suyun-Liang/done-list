@@ -3,19 +3,19 @@ import styled from "styled-components";
 
 const SIZE = {
   small: {
-    "--borderRadius": 4 + "px",
+    "--borderRadius": 6 + "px",
     "--fontSize": 16 + "px",
-    "--padding": "6px 12px",
+    "--padding": "6px 14px",
   },
   medium: {
-    "--borderRadius": 4 + "px",
+    "--borderRadius": 8 + "px",
     "--fontSize": 18 + "px",
-    "--padding": "14px 20px",
+    "--padding": "14px 22px",
   },
   large: {
-    "--borderRadius": 6 + "px",
+    "--borderRadius": 10 + "px",
     "--fontSize": 21 + "px",
-    "--padding": "18px 32px",
+    "--padding": "18px 34px",
   },
 };
 
@@ -43,11 +43,11 @@ export default Button;
 
 const ButtonBase = styled.button`
   font-size: var(--fontSize);
-  font-family: "Roboto", sans-serif;
+  font-family: inherit;
   border-radius: var(--borderRadius);
   border: 2px solid transparent;
   padding: var(--padding);
-  text-transform: uppercase;
+  text-transform: capitalize;
   cursor: pointer;
 
   &:focus {

@@ -3,6 +3,9 @@ import styles from "./AddEntryForm.module.css";
 import { EntriesContext } from "../../context/EntriesContext";
 import useTextInputValidation from "../../hooks/use-text-input-validation";
 import Button from "../Button/Button";
+import Input from "../Input/Input";
+import Textarea from "../Textarea/Textarea";
+import VisuallyHidden from "../VisuallyHidden/VisuallyHidden";
 
 function AddEntryForm() {
   const [entry, setEntry] = React.useState("");
@@ -30,12 +33,15 @@ function AddEntryForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor={`add-entry-field-${fieldId}`}>I did</label>
-      <input
+      <VisuallyHidden as="label" htmlFor={`add-entry-field-${fieldId}`}>
+        I did
+      </VisuallyHidden>
+      <Textarea
         id={`add-entry-field-${fieldId}`}
         ref={inputRef}
         type="text"
         value={entry}
+        placeholder="what happened todday..."
         onChange={(e) => {
           setEntry(e.target.value);
           if (submitError) setSubmitError("");
@@ -45,7 +51,7 @@ function AddEntryForm() {
             handleCancel();
           }
         }}
-      ></input>
+      />
       <Button variant="fill" size="small">
         Add
       </Button>

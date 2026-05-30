@@ -4,6 +4,7 @@ import styles from "./AddCommentForm.module.css";
 
 import useTextInputValidation from "../../hooks/use-text-input-validation";
 import Button from "../Button/Button";
+import Input from "../Input/Input";
 
 function AddCommentForm({ entryId, onAddComment, onCancel }) {
   const [draftNote, setDraftNote] = React.useState("");
@@ -23,7 +24,7 @@ function AddCommentForm({ entryId, onAddComment, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
+      <Input
         ref={inputRef}
         type="text"
         value={draftNote}

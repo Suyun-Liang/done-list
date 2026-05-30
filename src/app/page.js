@@ -8,10 +8,16 @@ export default function Page() {
   const initialNow = Date.now();
 
   return (
-    <main>
+    <Main>
       <Header>Today I...</Header>
       <TodaySection initialNow={initialNow} />
       <ViewHistoryLink />
-    </main>
+    </Main>
   );
 }
+
+const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+`;

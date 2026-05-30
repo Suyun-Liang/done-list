@@ -5,6 +5,7 @@ import VisuallyHidden from "../VisuallyHidden";
 
 import useTextInputValidation from "../../hooks/use-text-input-validation";
 import Button from "../Button/Button";
+import Input from "../Input/Input";
 
 function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
   const fieldId = React.useId();
@@ -24,7 +25,7 @@ function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
         <VisuallyHidden as="label" htmlFor={`edit-entry-field-${fieldId}`}>
           Edit entry
         </VisuallyHidden>
-        <input
+        <Input
           autoFocus
           id={`edit-entry-field-${fieldId}`}
           type="text"

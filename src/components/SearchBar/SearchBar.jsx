@@ -1,9 +1,10 @@
 import React from "react";
+import Input from "../Input/Input";
 
 function SearchBar({ query, onQueryChange }) {
   return (
     <div>
-      <input
+      <Input
         type="text"
         value={query}
         placeholder="Search lists..."
