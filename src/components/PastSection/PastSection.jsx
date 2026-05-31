@@ -57,6 +57,7 @@ function PastSection({ initialNow }) {
             activeEntryAction={activeEntryAction}
             onStartEntryAction={openEntryAction}
             onStopEntryAction={closeEntryAction}
+            variant="history"
           />
         ))}
       </div>

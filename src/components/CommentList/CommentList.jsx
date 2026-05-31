@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./CommentList.module.css";
 import { Trash2 } from "react-feather";
 import VisuallyHidden from "../VisuallyHidden";
+import styled from "styled-components";
 
 function CommentList({ comments, entryId, canDeleteComment, onDeleteComment }) {
   function handleDelete(commentId) {
@@ -10,7 +11,7 @@ function CommentList({ comments, entryId, canDeleteComment, onDeleteComment }) {
   }
   return (
     <div>
-      <ul>
+      <UnorderedList>
         {comments.map((c) => (
           <li key={c.id} className={styles.commentItem}>
             <div className={styles.commentMain}>
@@ -33,9 +34,13 @@ function CommentList({ comments, entryId, canDeleteComment, onDeleteComment }) {
             </div>
           </li>
         ))}
-      </ul>
+      </UnorderedList>
     </div>
   );
 }
 
 export default CommentList;
+
+const UnorderedList = styled.ul`
+  padding-inline-start: 20px;
+`;

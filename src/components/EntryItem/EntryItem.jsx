@@ -6,9 +6,11 @@ import AddCommentForm from "../AddCommentForm/AddCommentForm";
 import CommentList from "../CommentList/CommentList";
 import EditEntryForm from "../EditEntryForm/EditEntryForm";
 import VisuallyHidden from "../VisuallyHidden";
+import styled, { css } from "styled-components";
 
 function EntryItem({
   entry,
+  variant = "home",
   // display policy
   capabilities = {},
   now,
@@ -67,7 +69,7 @@ function EntryItem({
     handleCancel();
   }
   return (
-    <li className={styles.entryItem}>
+    <Item $variant={variant} className={styles.entryItem}>
       {/*  edit form replace the entry display */}
       {!isEditing && (
         <DisplayEntryItem
@@ -109,7 +111,7 @@ function EntryItem({
           onCancel={handleCancel}
         />
       )}
-    </li>
+    </Item>
   );
 }
 
@@ -164,3 +166,14 @@ function DisplayEntryItem({
 }
 
 export default EntryItem;
+
+const Item = styled.li`
+  ${({ $variant }) =>
+    $variant === "home" &&
+    css`
+      border: 1px solid var(--color-gray-700);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-pink-50);
+      padding: 4px 10px;
+    `}
+`;
