@@ -1,11 +1,11 @@
 import React from "react";
-import styles from "./AddEntryForm.module.css";
 import { EntriesContext } from "../../context/EntriesContext";
 import useTextInputValidation from "../../hooks/use-text-input-validation";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
 import Textarea from "../Textarea/Textarea";
 import VisuallyHidden from "../VisuallyHidden/VisuallyHidden";
+import styled from "styled-components";
 
 function AddEntryForm() {
   const [entry, setEntry] = React.useState("");
@@ -32,7 +32,7 @@ function AddEntryForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
       <VisuallyHidden as="label" htmlFor={`add-entry-field-${fieldId}`}>
         I did
       </VisuallyHidden>
@@ -41,7 +41,7 @@ function AddEntryForm() {
         ref={inputRef}
         type="text"
         value={entry}
-        placeholder="what happened todday..."
+        placeholder="what happened today..."
         onChange={(e) => {
           setEntry(e.target.value);
           if (submitError) setSubmitError("");
@@ -52,16 +52,28 @@ function AddEntryForm() {
           }
         }}
       />
-      <Button variant="fill" size="small">
-        Add
-      </Button>
-      <p
-        className={`${styles.entryError} ${submitError ? styles.visible : ""}`}
-      >
-        {submitError}
-      </p>
-    </form>
+      <Actions>
+        <Button variant="fill" size="small" type="submit">
+          Add
+        </Button>
+      </Actions>
+      <ErrorMsg $visible={Boolean(submitError)}>{submitError}</ErrorMsg>
+    </Form>
   );
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+`;
+const Actions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+const ErrorMsg = styled.p`
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transition: opacity 500ms ease;
+`;
 
 export default React.memo(AddEntryForm);

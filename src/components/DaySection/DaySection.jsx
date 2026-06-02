@@ -2,6 +2,7 @@ import React from "react";
 import EntryList from "../EntryList";
 import { formatDate } from "../../utils";
 import styled, { css } from "styled-components";
+import EmptyState from "../EmptyState/EmptyState";
 
 function DaySection({ dayKey, entries, ...delegated }) {
   const { variant = "home" } = { ...delegated };
@@ -10,7 +11,19 @@ function DaySection({ dayKey, entries, ...delegated }) {
     <Wrapper $variant={variant}>
       <Date $variant={variant}>{formatDate(dayKey, "YYYY-MMM-dd")}</Date>
       {entries.length > 0 && <EntryList entries={entries} {...delegated} />}
-      {entries.length === 0 && <QuietDay>A quiet day...</QuietDay>}
+
+      {entries.length === 0 && (
+        <EmptyState
+          illustration={"/assets/illustrations/book-and-flowers.png"}
+          illustrationSize={variant === "history" ? 80 : 300}
+          title={variant === "history" ? undefined : "No Memories..."}
+          description={
+            variant === "history"
+              ? "It was a quiet day..."
+              : "Take a moment. Write something..."
+          }
+        />
+      )}
     </Wrapper>
   );
 }
@@ -39,10 +52,6 @@ const Date = styled.div`
       : css`
           border-bottom: 1px solid currentColor;
         `}
-`;
-
-const QuietDay = styled.p`
-  margin: auto;
 `;
 
 export default DaySection;

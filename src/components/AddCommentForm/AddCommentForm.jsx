@@ -1,10 +1,9 @@
 import React from "react";
 
-import styles from "./AddCommentForm.module.css";
-
 import useTextInputValidation from "../../hooks/use-text-input-validation";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
+import styled from "styled-components";
 
 function AddCommentForm({ entryId, onAddComment, onCancel }) {
   const [draftNote, setDraftNote] = React.useState("");
@@ -30,7 +29,7 @@ function AddCommentForm({ entryId, onAddComment, onCancel }) {
         value={draftNote}
         onChange={(e) => {
           setDraftNote(e.target.value);
-          setSubmitError("");
+          if (submitError) setSubmitError("");
         }}
         onKeyDown={(e) => {
           if (e.code === "Escape") {
@@ -41,13 +40,14 @@ function AddCommentForm({ entryId, onAddComment, onCancel }) {
       <Button variant="fill" size="small" type="submit">
         add comment
       </Button>
-      <p
-        className={`${styles.entryError} ${submitError ? styles.visible : ""}`}
-      >
-        {submitError}
-      </p>
+      <ErrorMsg $visible={Boolean(submitError)}>{submitError}</ErrorMsg>
     </form>
   );
 }
+
+const ErrorMsg = styled.p`
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transition: opacity 500ms ease;
+`;
 
 export default AddCommentForm;

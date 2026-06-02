@@ -6,6 +6,7 @@ import VisuallyHidden from "../VisuallyHidden";
 import useTextInputValidation from "../../hooks/use-text-input-validation";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
+import styled from "styled-components";
 
 function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
   const fieldId = React.useId();
@@ -58,13 +59,14 @@ function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
           </Button>
         </div>
       </div>
-      <p
-        className={`${styles.entryError} ${submitError ? styles.visible : ""}`}
-      >
-        {submitError}
-      </p>
+      <ErrorMsg $visible={Boolean(submitError)}>{submitError}</ErrorMsg>
     </form>
   );
 }
+
+const ErrorMsg = styled.p`
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transition: opacity 500ms ease;
+`;
 
 export default EditEntryForm;
