@@ -7,6 +7,7 @@ import SearchResultSection from "../SearchResultSection/SearchResultSection";
 import PastSection from "../PastSection";
 
 import { useDebouncedValue } from "../../hooks/use-debounced-value";
+import styled from "styled-components";
 
 function SearchableHistory({ children }) {
   const [query, setQuery] = React.useState("");
@@ -14,11 +15,17 @@ function SearchableHistory({ children }) {
 
   const isSearching = debouncedQuery.trim() !== "";
   return (
-    <div>
+    <Wrapper>
       <SearchBar query={query} onQueryChange={setQuery} />
       {isSearching ? <SearchResultSection query={debouncedQuery} /> : children}
-    </div>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
 
 export default SearchableHistory;

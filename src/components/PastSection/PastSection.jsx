@@ -1,15 +1,11 @@
 "use client";
 
 import React from "react";
-import styles from "./PastSection.module.css";
 import DaySection from "../DaySection/DaySection";
 import { EntriesContext } from "../../context/EntriesContext";
-import {
-  buildCompactTimeline,
-  buildDailyTimeline,
-  getDayKey,
-} from "../../utils";
+import { buildCompactTimeline, getDayKey } from "../../utils";
 import useTick from "../../hooks/use-tick";
+import styled from "styled-components";
 
 function PastSection({ initialNow }) {
   // {entryId, type: "edit"|"comment"}
@@ -43,7 +39,7 @@ function PastSection({ initialNow }) {
   return (
     <div>
       <p>Past Section</p>
-      <div className={styles.wrapper}>
+      <Wrapper>
         {dailyTimeline.map((e) => (
           <DaySection
             key={e.dayKey}
@@ -60,9 +56,21 @@ function PastSection({ initialNow }) {
             variant="history"
           />
         ))}
-      </div>
+      </Wrapper>
     </div>
   );
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  @media (min-width: 48rem) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+`;
 
 export default PastSection;

@@ -3,7 +3,7 @@
 import React from "react";
 import { useStickyState } from "../../hooks/use-sticky-state.js";
 import { normalizeEntry } from "../../utils.js";
-import { normalizeTextInput } from "../../helper.js";
+import { createId, normalizeTextInput } from "../../helper.js";
 
 export const EntriesContext = React.createContext();
 
@@ -134,7 +134,7 @@ function EntriesProvider({ children }) {
       setEntries((curE) => [
         ...curE,
         {
-          id: crypto.randomUUID(),
+          id: createId(),
           text: normalizedText,
           createdAt: Date.now(),
           comments: [],
@@ -170,7 +170,7 @@ function EntriesProvider({ children }) {
         curE.map((e) => {
           if (e.id !== entryId) return e;
           const newComment = {
-            id: crypto.randomUUID(),
+            id: createId(),
             text: normalizedText,
             createdAt: Date.now(),
           };

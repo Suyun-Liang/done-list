@@ -72,6 +72,7 @@ const Actions = styled.div`
   justify-content: flex-end;
 `;
 const ErrorMsg = styled.p`
+  color: var(--color-teal-700);
   opacity: ${({ $visible }) => ($visible ? 1 : 0)};
   transition: opacity 500ms ease;
 `;

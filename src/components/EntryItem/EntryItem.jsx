@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./EntryItem.module.css";
 import { Edit, MessageSquare, Trash2 } from "react-feather";
 import { formatRelativeTime, isValidTimestamp } from "../../utils";
 import AddCommentForm from "../AddCommentForm/AddCommentForm";
@@ -7,6 +6,7 @@ import CommentList from "../CommentList/CommentList";
 import EditEntryForm from "../EditEntryForm/EditEntryForm";
 import VisuallyHidden from "../VisuallyHidden";
 import styled, { css } from "styled-components";
+import Button from "../Button/Button";
 
 function EntryItem({
   entry,
@@ -69,7 +69,7 @@ function EntryItem({
     handleCancel();
   }
   return (
-    <Item $variant={variant} className={styles.entryItem}>
+    <Item $variant={variant}>
       {/*  edit form replace the entry display */}
       {!isEditing && (
         <DisplayEntryItem
@@ -129,38 +129,46 @@ function DisplayEntryItem({
 }) {
   return (
     <>
-      <div className={styles.entryMain}>
-        <div className={styles.entryTextGroup}>
+      <Main>
+        <TextGroup>
           <p>
             {text}{" "}
             {showRelativeTime && isValidTimestamp(now) && (
-              <span className={styles.relativeTime}>
-                {formatRelativeTime(createdAt, now)}
-              </span>
+              <RelativeTime>{formatRelativeTime(createdAt, now)}</RelativeTime>
             )}
           </p>
-        </div>
-        <div className={styles.entryActionGroup}>
+        </TextGroup>
+        <ActionGroup>
           {canEdit && (
-            <button type="button" onClick={onEdit}>
+            <Button type="button" variant="ghost" size="icon" onClick={onEdit}>
               <Edit />
               <VisuallyHidden>edit entry</VisuallyHidden>
-            </button>
+            </Button>
           )}
           {canComment && (
-            <button onClick={onComment}>
+            <Button
+              variant="ghost"
+              size="icon"
+              type="button"
+              onClick={onComment}
+            >
               <MessageSquare />
               <VisuallyHidden>comment entry</VisuallyHidden>
-            </button>
+            </Button>
           )}
           {canDelete && (
-            <button type="button" onClick={onDelete}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onDelete}
+            >
               <Trash2 />
               <VisuallyHidden>delete entry</VisuallyHidden>
-            </button>
+            </Button>
           )}
-        </div>
-      </div>
+        </ActionGroup>
+      </Main>
     </>
   );
 }
@@ -168,6 +176,9 @@ function DisplayEntryItem({
 export default EntryItem;
 
 const Item = styled.li`
+  /* background-color: var(--color-surface);
+  border-radius: var(--radius-sm); */
+  margin-bottom: var(--space-1);
   ${({ $variant }) =>
     $variant === "home" &&
     css`
@@ -176,4 +187,25 @@ const Item = styled.li`
       background-color: var(--color-pink-50);
       padding: 4px 10px;
     `}
+`;
+
+const Main = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const TextGroup = styled.div`
+  min-width: 0;
+  & p {
+    overflow-wrap: anywhere;
+  }
+`;
+const ActionGroup = styled.div`
+  flex-shrink: 0;
+`;
+
+const RelativeTime = styled.span`
+  color: var(--color-muted);
+  font-size: 0.75rem;
 `;

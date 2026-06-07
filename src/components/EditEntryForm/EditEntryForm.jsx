@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./EditEntryForm.module.css";
 
 import VisuallyHidden from "../VisuallyHidden";
 
@@ -22,11 +21,11 @@ function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className={styles.formMain}>
+      <Main>
         <VisuallyHidden as="label" htmlFor={`edit-entry-field-${fieldId}`}>
           Edit entry
         </VisuallyHidden>
-        <Input
+        <StyledInput
           autoFocus
           id={`edit-entry-field-${fieldId}`}
           type="text"
@@ -42,7 +41,7 @@ function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
             }
           }}
         />
-        <div className={styles.editEntryActionGroup}>
+        <EntryActionGroup>
           <Button variant="fill" size="small" type="submit">
             save
           </Button>
@@ -57,14 +56,33 @@ function EditEntryForm({ id, onSave, onCancel, value, setValue }) {
           >
             cancel
           </Button>
-        </div>
-      </div>
+        </EntryActionGroup>
+      </Main>
       <ErrorMsg $visible={Boolean(submitError)}>{submitError}</ErrorMsg>
     </form>
   );
 }
 
+const Main = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StyledInput = styled(Input)`
+  min-width: 0;
+`;
+
+const EntryActionGroup = styled.div`
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2px;
+`;
+
 const ErrorMsg = styled.p`
+  color: var(--color-teal-700);
   opacity: ${({ $visible }) => ($visible ? 1 : 0)};
   transition: opacity 500ms ease;
 `;

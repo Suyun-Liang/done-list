@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import EntryItem from "../EntryItem/EntryItem";
 import styled, { css } from "styled-components";
 
